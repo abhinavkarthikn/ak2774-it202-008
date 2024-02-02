@@ -21,7 +21,7 @@ function bePositive($arr) {
             $arr[$x]=$arr[$x]*(-1);
         }
 
-        echo $arr[$x];
+        echo $arr[$x] . " ";
     }
 }
 echo "Problem 3: Be Positive<br>";
