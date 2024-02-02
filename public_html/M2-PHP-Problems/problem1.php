@@ -13,7 +13,7 @@ function processArray($arr) {
     for($x=0; $x<$length; $x++){
 
         if($arr[$x]%2==1){
-            return $arr;
+            echo $arr[$x] . " ";
         }
     }
     
