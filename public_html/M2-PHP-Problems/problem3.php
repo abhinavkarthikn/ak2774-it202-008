@@ -12,6 +12,7 @@ function bePositive($arr) {
     //hint: may want to use var_dump() or similar to show final data types
     $length=count($arr);
     for($x=0; $x<$length; $x++){
+        
         if(is_string($arr[$x])){
             $arr[$x]=intval($arr[$x]);
         }
