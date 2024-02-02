@@ -10,6 +10,18 @@ function bePositive($arr) {
     //note: use the $arr variable, don't directly touch $a1-$a4
     //TODO use echo to output all of the values as positive (even if they were originally positive) and maintain the original datatype
     //hint: may want to use var_dump() or similar to show final data types
+    $length=count($arr);
+    for($x=0; $x<$length; $x++){
+        if(is_string($arr[$x])){
+            $arr[$x]=intval($arr[$x]);
+        }
+        
+        if($arr[$x]<0 && (is_int($arr[$x]) || is_float($arr[$x]))){
+            $arr[$x]=$arr[$x]*(-1);
+        }
+
+        echo $arr[$x];
+    }
 }
 echo "Problem 3: Be Positive<br>";
 ?>

@@ -8,6 +8,15 @@ function processArray($arr) {
     echo "<br>Odds output:<br>";
     //note: use the $arr variable to iterate over, don't directly touch $a1-$a4
     //TODO add logic here to echo out only odd values
+    
+    $length=count($arr);
+    for($x=0; $x<$length; $x++){
+
+        if($arr[$x]%2==1){
+            return $arr;
+        }
+    }
+    
 
 }
 echo "Problem 1: Odd Output<br>";
