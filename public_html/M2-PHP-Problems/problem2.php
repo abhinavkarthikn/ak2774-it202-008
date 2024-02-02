@@ -11,9 +11,10 @@ function getTotal($arr) {
     $length=count($arr);
     $total=0.00;
     for($x=0; $x<$length; $x++){
-        $total=$total+$arr[$x];
+        $total+=$arr[$x];
     }
     //TODO do rounding stuff here (round to two decimals i.e., 0.10, 0.01, 0.00)
+    $total=round($total,2);
     echo "The total is " . var_export($total, true);
 }
 echo "Problem 2: Adding Floats<br>";
