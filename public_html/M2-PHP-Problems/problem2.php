@@ -8,9 +8,12 @@ function getTotal($arr) {
     $total = 0.00;
     //note: use the $arr variable, don't directly touch $a1-$a4
     //TODO do adding here
+<<<<<<< HEAD
+=======
 
     //Ak2774-2/2/2024
 
+>>>>>>> c46c5b6eb14e520278c139c1434c66dec3612711
     $length=count($arr);
     $total=0.00;
     for($x=0; $x<$length; $x++){
