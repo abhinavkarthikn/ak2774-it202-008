@@ -22,7 +22,6 @@ require_once(__DIR__ . "/../../lib/functions.php");
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
-
         return true;
     }
 </script>
@@ -57,12 +56,24 @@ require_once(__DIR__ . "/../../lib/functions.php");
         echo "Password must be at least 8 characters long <br>";
         $hasError=true;
     }
-    if(strlen($password)>0 && $password!=$confirm){
+    if(strlen($password)>0 && $password!==$confirm){
         echo "Passwords must match <br>";
         $hasError=true;
     }
     if(!$hasError){
-        echo "Welcome, $email <br>";
+        //echo "Welcome, $email <br>";
+        //TODO 4
+        $hash=password_hash($password, PASSWORD_BCRYPT);
+        $db= getDB();
+        $stmt = $db->prepare("INSERT INTO Users (email, password) VALUES(:email, :password)");
+        try{
+            $stmt->execute([":email"=>$email, ":password"=>$hash]);
+            echo "Successfully registered! <br>";
+        }
+        catch(Exception $e){
+            echo "There was a error registering <br>";
+            echo "<pre>" . var_export($e, true) . "</pre>";
+        }
     }
 
  }
