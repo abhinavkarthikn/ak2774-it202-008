@@ -47,7 +47,6 @@ require_once(__DIR__ . "/../../partials/nav.php");
         echo "Password must be at least 8 characters long <br>";
         $hasError=true;
     }
-    
     if(!$hasError){
         //TODO 4
         $db = getDB();
@@ -61,6 +60,8 @@ require_once(__DIR__ . "/../../partials/nav.php");
                     unset($user["password"]);
                     if (password_verify($password, $hash)) {
                         echo "Welcome $email";
+                        $_SESSION["user"]= $user;
+                        die(header("Location: home.php"));
                     } else {
                         echo "Invalid password";
                     }
