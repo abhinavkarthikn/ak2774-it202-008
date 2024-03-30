@@ -17,7 +17,26 @@ require(__DIR__ . "/../../partials/nav.php");
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
         let email =form.email.value;
-        return true;
+        var password = form.password.value;
+        let isValid=true;
+
+        // Check if email/username is empty
+        if (email == "") {
+            flash("Email/Username must not be empty [js]"); 
+            isValid=false;
+        }
+
+        // Check if password is empty
+        if (password == "") {
+            flash("Password must not be empty [js]"); 
+            isValid=false;
+        }
+
+        if (password.length < 8) {
+            flash("Password too short [js]");
+            isValid=false;
+        }
+        return isValid;
     }
 </script>
 <?php
@@ -29,7 +48,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     //TODO 3
     $hasError = false;
     if (empty($email)) {
-        flash("Email must not be empty");
+        flash("Email/Username must not be empty");
         $hasError = true;
     }
     if (str_contains($email, "@")) {

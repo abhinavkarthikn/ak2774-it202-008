@@ -121,9 +121,28 @@ $username = get_username();
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
         if (pw !== con) {
-            flash("Password and Confrim password must match", "warning");
+            flash("Password and Confirm password must match [js]", "warning");
             isValid = false;
         }
+
+        if (pw == "") {
+            flash("New password must not be empty [js]", "warning");
+            isValid = false;
+        }
+
+        // Check if new password meets minimum length requirement
+        if (pw.length < 8) {
+            flash("New password must be at least 8 characters long [js]", "warning");
+            isValid = false;
+        }
+
+        // Check if confirm password is empty
+        if (con == "") {
+            flash("Confirm password must not be empty [js]", "warning");
+            isValid = false;
+        }
+
+
         return isValid;
     }
 </script>
