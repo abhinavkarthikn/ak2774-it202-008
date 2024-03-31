@@ -8,21 +8,14 @@ function processArray($arr) {
     echo "<br>Odds output:<br>";
     //note: use the $arr variable to iterate over, don't directly touch $a1-$a4
     //TODO add logic here to echo out only odd values
-<<<<<<< HEAD
-=======
 
     //Ak2774-2/2/2024
->>>>>>> c46c5b6eb14e520278c139c1434c66dec3612711
     
     $length=count($arr);
     for($x=0; $x<$length; $x++){
 
         if($arr[$x]%2==1){
-<<<<<<< HEAD
-            return $arr;
-=======
             echo $arr[$x] . " ";
->>>>>>> c46c5b6eb14e520278c139c1434c66dec3612711
         }
     }
     
