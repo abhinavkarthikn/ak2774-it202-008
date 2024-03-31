@@ -113,6 +113,7 @@ $username = get_username();
 
 <script>
     function validate(form) {
+        let pwd= form.currentPassword.value;
         let pw = form.newPassword.value;
         let con = form.confirmPassword.value;
         let isValid = true;
@@ -122,6 +123,11 @@ $username = get_username();
         //find the flash container, create a new element, appendChild
         if (pw !== con) {
             flash("Password and Confirm password must match [js]", "warning");
+            isValid = false;
+        }
+
+        if(pwd==""){
+            flash("Current password must not be empty [js]", "warning");
             isValid = false;
         }
 
