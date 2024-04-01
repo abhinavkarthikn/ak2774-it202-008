@@ -6,7 +6,7 @@ require(__DIR__ . "/../../partials/nav.php");
 
 if (is_logged_in(true)) {
     //comment this out if you don't want to see the session variables
-    error_log("Session data: " . var_export($_SESSION, true));
+    error_log("Session data: " . var_export($_SESSION, true));       //ak2774, 4/1/2024
 }
 ?>
 <?php
