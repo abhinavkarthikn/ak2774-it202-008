@@ -30,49 +30,33 @@ reset_session();
         var password = form.password.value;
         var confirm = form.confirm.value;
         let isValid=true;
-
-        // Regular expression patterns for email and username validation
         var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         var usernamePattern = /^[a-zA-Z0-9_-]{3,16}$/;
 
-        // Check if email is empty
         if (email === "") {
             flash("Email must not be empty [js]", "danger");
             isValid=false;
         }
-
-        // Check if email format is valid
         else if (!emailPattern.test(email)) {
-            flash("Invalid email address [js]", "danger");
-            isValid=false;
+            flash("Invalid email address [js]", "danger");                     //ak2774
+            isValid=false;                                                     //4/1/2024
         }
-
-        // Check if username is empty
         if (username === "") {
             flash("Username must not be empty [js]", "danger");
             isValid=false;
         }
-
-        // Check if username format is valid
         else if (!usernamePattern.test(username)) {
             flash("Username must only contain 3-16 characters a-z, 0-9, _, or - [js]", "danger");
             isValid=false;
         }
-
-        // Check if password is empty
         if (password === "") {
             flash("Password must not be empty [js]", "danger");
             isValid=false;
         }
-
-
-        // Check if password meets minimum length requirement
         else if (password.length < 8 || confirm.length < 8) {
             flash("Password must be at least 8 characters long [js]", "danger");
             isValid=false;
         }
-
-        // Check if password and confirm password match
         if (password != confirm) {
             flash("Passwords do not match [js]", "danger");
             isValid=false;
@@ -106,17 +90,15 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
         $hasError = true;
     }
     if (empty($password) || empty($confirm)) {
-        flash("password must not be empty", "danger");
-        $hasError = true;
+        flash("password must not be empty", "danger");             //ak2774
+        $hasError = true;                                          //4/1/2024
     }
     
     if (!is_valid_password($password)) {
         flash("Password too short", "danger");
         $hasError = true;
     }
-    if (
-        strlen($password) > 0 && $password !== $confirm
-    ) {
+    if (strlen($password) > 0 && $password !== $confirm) {
         flash("Passwords must match", "danger");
         $hasError = true;
     }

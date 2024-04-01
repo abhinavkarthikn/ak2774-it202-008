@@ -28,8 +28,13 @@ require(__DIR__ . "/../../partials/nav.php");
             isValid=false;
         }
 
-        else if(!emailPattern.test(email) && !usernamePattern.test(email)){
-            flash("Invalid email/username [js]");
+        else if(!emailPattern.test(email) ){
+            flash("Invalid email [js]");
+            isValid=false;
+        }
+
+        else if(!usernamePattern.test(email)){
+            flash("Invalid username [js]");
             isValid=false;
         }
 
