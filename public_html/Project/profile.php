@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../partials/nav.php");
+require_once(__DIR__ . "/../../partials/nav.php");  // ak2774, 4/1/2024
 is_logged_in(true);
 ?>
 <?php
