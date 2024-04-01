@@ -9,8 +9,8 @@ function is_logged_in($redirect = false, $destination = "login.php")
     $isLoggedIn = isset($_SESSION["user"]);
     if ($redirect && !$isLoggedIn) {
         //if this triggers, the calling script won't receive a reply since die()/exit() terminates it
-        flash("You must be logged in to view this page", "warning");
-        die(header("Location: $destination"));
+        flash("You must be logged in to view this page", "warning");     //ak2774
+        die(header("Location: $destination"));                           //4/1/2024
     }
     return $isLoggedIn;
 }
@@ -18,7 +18,7 @@ function has_role($role)
 {
     if (is_logged_in() && isset($_SESSION["user"]["roles"])) {
         foreach ($_SESSION["user"]["roles"] as $r) {
-            if ($r["name"] === $role) {
+            if ($r["name"] === $role) {           //ak2774, 4/1/2024
                 return true;
             }
         }
