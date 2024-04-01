@@ -28,18 +28,18 @@ require(__DIR__ . "/../../partials/nav.php");
             isValid=false;
         }
 
+        else if(!emailPattern.test(email) && !usernamePattern.test(email)){
+            flash("Invalid email/username [js]");
+            isValid=false;
+        }
+
         // Check if password is empty
         if (password == "") {
             flash("Password must not be empty [js]"); 
             isValid=false;
         }
 
-        if(!emailPattern.test(email) && !usernamePattern.test(email)){
-            flash("Invalid email/username [js]");
-            isValid=false;
-        }
-
-        if (password.length < 8) {
+        else if (password.length < 8) {
             flash("Password too short [js]");
             isValid=false;
         }

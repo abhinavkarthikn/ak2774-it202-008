@@ -98,15 +98,15 @@ $username = get_username();
     <div>Password Reset</div>
     <div class="mb-3">
         <label for="cp">Current Password</label>
-        <input type="password" name="currentPassword" id="cp" />
+        <input type="password" name="currentPassword" id="cp" minlength=8 />
     </div>
     <div class="mb-3">
         <label for="np">New Password</label>
-        <input type="password" name="newPassword" id="np" />
+        <input type="password" name="newPassword" id="np" minlength=8 />
     </div>
     <div class="mb-3">
         <label for="conp">Confirm Password</label>
-        <input type="password" name="confirmPassword" id="conp" />
+        <input type="password" name="confirmPassword" id="conp" minlength=8/>
     </div>
     <input type="submit" value="Update Profile" name="save" />
 </form>
@@ -125,22 +125,13 @@ $username = get_username();
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
-        if (pw !== con) {
-            flash("Password and Confirm password must match [js]", "warning");
-            isValid = false;
-        }
-
-        if(pwd==""){
-            flash("Current password must not be empty [js]", "warning");
-            isValid = false;
-        }
-
+        
         if (email === "") {
             flash("Email must not be empty [js]", "warning");
             isValid = false;
         }
 
-        if (!emailPattern.test(email)) {
+        else if (!emailPattern.test(email)) {
             flash("Invalid email address [js]", "warning");
             isValid = false;
         }
@@ -150,26 +141,33 @@ $username = get_username();
             isValid = false;
         }
 
-        if (!usernamePattern.test(username)) {
+        else if (!usernamePattern.test(username)) {
             flash("Username must only contain 3-16 characters a-z, 0-9, _, or - [js]", "warning");
             isValid = false;
         }
 
-        if (pw == "") {
-            flash("New password must not be empty [js]", "warning");
+        if(pwd!==""){
+            if (pw === "") {
+                flash("New password must not be empty [js]", "warning");
+                isValid = false;
+            }
+    
+            // Check if new password meets minimum length requirement
+             else if (pw.length < 8) {
+                flash("New password must be at least 8 characters long [js]", "warning");
+                isValid = false;
+            }
+    
+            // Check if confirm password is empty
+            if (con === "") {
+                flash("Confirm password must not be empty [js]", "warning");
+                isValid = false;
+            }
+
+            if (pw !== con) {
+            flash("Password and Confirm password must match [js]", "warning");
             isValid = false;
         }
-
-        // Check if new password meets minimum length requirement
-        if (pw.length < 8) {
-            flash("New password must be at least 8 characters long [js]", "warning");
-            isValid = false;
-        }
-
-        // Check if confirm password is empty
-        if (con == "") {
-            flash("Confirm password must not be empty [js]", "warning");
-            isValid = false;
         }
 
 
