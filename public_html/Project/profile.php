@@ -113,9 +113,13 @@ $username = get_username();
 
 <script>
     function validate(form) {
+        let email= form.email.value;
+        let username= form.username.value;
         let pwd= form.currentPassword.value;
         let pw = form.newPassword.value;
         let con = form.confirmPassword.value;
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var usernamePattern = /^[a-zA-Z0-9_-]{3,16}$/;
         let isValid = true;
         //TODO add other client side validation....
 
@@ -128,6 +132,26 @@ $username = get_username();
 
         if(pwd==""){
             flash("Current password must not be empty [js]", "warning");
+            isValid = false;
+        }
+
+        if (email === "") {
+            flash("Email must not be empty [js]", "warning");
+            isValid = false;
+        }
+
+        if (!emailPattern.test(email)) {
+            flash("Invalid email address [js]", "warning");
+            isValid = false;
+        }
+
+        if (username === "") {
+            flash("Username must not be empty [js]", "warning");
+            isValid = false;
+        }
+
+        if (!usernamePattern.test(username)) {
+            flash("Username must only contain 3-16 characters a-z, 0-9, _, or - [js]", "warning");
             isValid = false;
         }
 

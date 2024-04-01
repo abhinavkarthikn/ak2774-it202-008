@@ -18,6 +18,8 @@ require(__DIR__ . "/../../partials/nav.php");
         //ensure it returns false for an error and true for success
         let email =form.email.value;
         var password = form.password.value;
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var usernamePattern = /^[a-zA-Z0-9_-]{3,16}$/;
         let isValid=true;
 
         // Check if email/username is empty
@@ -29,6 +31,11 @@ require(__DIR__ . "/../../partials/nav.php");
         // Check if password is empty
         if (password == "") {
             flash("Password must not be empty [js]"); 
+            isValid=false;
+        }
+
+        if(!emailPattern.test(email) && !usernamePattern.test(email)){
+            flash("Invalid email/username [js]");
             isValid=false;
         }
 
