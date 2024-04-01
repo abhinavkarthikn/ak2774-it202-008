@@ -42,7 +42,7 @@ reset_session();
         }
 
         // Check if email format is valid
-        if (!emailPattern.test(email)) {
+        else if (!emailPattern.test(email)) {
             flash("Invalid email address [js]", "danger");
             isValid=false;
         }
@@ -54,7 +54,7 @@ reset_session();
         }
 
         // Check if username format is valid
-        if (!usernamePattern.test(username)) {
+        else if (!usernamePattern.test(username)) {
             flash("Username must only contain 3-16 characters a-z, 0-9, _, or - [js]", "danger");
             isValid=false;
         }
@@ -65,20 +65,15 @@ reset_session();
             isValid=false;
         }
 
-        // Check if confirm password is empty
-        if (confirm === "") {
-            flash("Confirm password must not be empty [js]", "danger");
-            isValid=false;
-        }
 
         // Check if password meets minimum length requirement
-        if (password.length < 8 || confirm.length < 8) {
+        else if (password.length < 8 || confirm.length < 8) {
             flash("Password must be at least 8 characters long [js]", "danger");
             isValid=false;
         }
 
         // Check if password and confirm password match
-        if (password !== confirm) {
+        if (password != confirm) {
             flash("Passwords do not match [js]", "danger");
             isValid=false;
         }
