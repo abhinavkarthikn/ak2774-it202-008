@@ -1,25 +1,7 @@
-.alert-success {
-    background-color: green
-}
-
-.alert-warning {
-    background-color: yellow;
-}
-
-.alert-danger {
-    background-color: red;
-}
-
-.alert-info {
-    background-color: teal;
-}
-
-
 nav li{
     display: inline;
     background-color: skyblue;
-    padding: 10px;
-    margin: 5px;
+    margin: 7px;
     border-radius: 5px;
 
 }
