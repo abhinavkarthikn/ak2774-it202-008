@@ -2,25 +2,15 @@
 require(__DIR__ . "/../../partials/nav.php");
 reset_session();
 ?>
-<form onsubmit="return validate(this)" method="POST">
-    <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" required />
-    </div>
-    <div>
-        <label for="username">Username</label>
-        <input type="text" name="username" required maxlength="30" />
-    </div>
-    <div>
-        <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
-    </div>
-    <div>
-        <label for="confirm">Confirm</label>
-        <input type="password" name="confirm" required minlength="8" />
-    </div>
-    <input type="submit" value="Register" />
-</form>
+<div class="container-fluid">
+    <form onsubmit="return validate(this)" method="POST">
+        <?php render_input(["type" => "email", "id" => "email", "name" => "email", "label" => "Email", "rules" => ["required" => true]]); ?>
+        <?php render_input(["type" => "text", "id" => "username", "name" => "username", "label" => "Username", "rules" => ["required" => true, "maxlength" => 30]]); ?>
+        <?php render_input(["type" => "password", "id" => "password", "name" => "password", "label" => "Password", "rules" => ["required" => true, "minlength" => 8]]); ?>
+        <?php render_input(["type" => "password", "id" => "confirm", "name" => "confirm", "label" => "Confirm Password", "rules" => ["required" => true, "minlength" => 8]]); ?>
+        <?php render_button(["text" => "Register", "type" => "submit"]); ?>
+    </form>
+</div>
 <script>
     function validate(form) {
         //TODO 1: implement JavaScript validation
@@ -29,40 +19,42 @@ reset_session();
         var username = form.username.value;
         var password = form.password.value;
         var confirm = form.confirm.value;
-        let isValid=true;
+        let isValid = true;
         var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         var usernamePattern = /^[a-zA-Z0-9_-]{3,16}$/;
 
+
         if (email === "") {
             flash("Email must not be empty [js]", "danger");
-            isValid=false;
-        }
-        else if (!emailPattern.test(email)) {
-            flash("Invalid email address [js]", "danger");                     //ak2774
-            isValid=false;                                                     //4/1/2024
+            isValid = false;
+        } else if (!emailPattern.test(email)) {
+            flash("Invalid email address [js]", "danger"); //ak2774
+            isValid = false; //4/1/2024
         }
         if (username === "") {
             flash("Username must not be empty [js]", "danger");
-            isValid=false;
-        }
-        else if (!usernamePattern.test(username)) {
+            isValid = false;
+        } else if (!usernamePattern.test(username)) {
             flash("Username must only contain 3-16 characters a-z, 0-9, _, or - [js]", "danger");
-            isValid=false;
+            isValid = false;
         }
         if (password === "") {
             flash("Password must not be empty [js]", "danger");
-            isValid=false;
-        }
-        else if (password.length < 8 || confirm.length < 8) {
+            isValid = false;
+        } else if (password.length < 8 || confirm.length < 8) {
             flash("Password must be at least 8 characters long [js]", "danger");
-            isValid=false;
+            isValid = false;
         }
         if (password != confirm) {
             flash("Passwords do not match [js]", "danger");
-            isValid=false;
+            isValid = false;
         }
-        
+
         return isValid;
+
+
+
+        return true;
     }
 </script>
 <?php
@@ -89,16 +81,21 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
         flash("Username must only contain 3-16 characters a-z, 0-9, _, or -", "danger");
         $hasError = true;
     }
-    if (empty($password) || empty($confirm)) {
-        flash("password must not be empty", "danger");             //ak2774
-        $hasError = true;                                          //4/1/2024
+    if (empty($password)) {
+        flash("password must not be empty", "danger");
+        $hasError = true;
     }
-    
+    if (empty($confirm)) {
+        flash("Confirm password must not be empty", "danger");
+        $hasError = true;
+    }
     if (!is_valid_password($password)) {
         flash("Password too short", "danger");
         $hasError = true;
     }
-    if (strlen($password) > 0 && $password !== $confirm) {
+    if (
+        strlen($password) > 0 && $password !== $confirm
+    ) {
         flash("Passwords must match", "danger");
         $hasError = true;
     }
@@ -110,7 +107,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
         try {
             $stmt->execute([":email" => $email, ":password" => $hash, ":username" => $username]);
             flash("Successfully registered!", "success");
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             users_check_duplicate($e->errorInfo);
         }
     }
