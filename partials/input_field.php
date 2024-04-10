@@ -25,7 +25,7 @@
     <?php if ($_include_margin) : ?>
         <div class="mb-3">
         <?php endif; ?>
-        <?php if ($_label && in_array($_type, ["checkbox"])) : ?>
+        <?php if ($_label && !in_array($_type, ["checkbox"])) : ?>
             <?php /* label field */ ?>
             <label class="form-label" for="<?php se($_id); ?>"><?php se($_label); ?></label>
         <?php endif; ?>
