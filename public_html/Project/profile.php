@@ -85,37 +85,25 @@ if (isset($_POST["save"])) {
 $email = get_user_email();
 $username = get_username();
 ?>
-<form method="POST" onsubmit="return validate(this);">
-    <div class="mb-3">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="<?php se($email); ?>" />
-    </div>
-    <div class="mb-3">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" value="<?php se($username); ?>" />
-    </div>
-    <!-- DO NOT PRELOAD PASSWORD -->
-    <div>Password Reset</div>
-    <div class="mb-3">
-        <label for="cp">Current Password</label>
-        <input type="password" name="currentPassword" id="cp" minlength=8 />
-    </div>
-    <div class="mb-3">
-        <label for="np">New Password</label>
-        <input type="password" name="newPassword" id="np" minlength=8 />
-    </div>
-    <div class="mb-3">
-        <label for="conp">Confirm Password</label>
-        <input type="password" name="confirmPassword" id="conp" minlength=8/>
-    </div>
-    <input type="submit" value="Update Profile" name="save" />
-</form>
+<div class="container-fluid">
+    <form method="POST" onsubmit="return validate(this);">
+        <?php render_input(["type" => "email", "id" => "email", "name" => "email", "label" => "Email", "value" => $email, "rules" => ["required" => true]]); ?>
+        <?php render_input(["type" => "text", "id" => "username", "name" => "username", "label" => "Username", "value" => $username, "rules" => ["required" => true, "maxlength" => 30]]); ?>
+        <!-- DO NOT PRELOAD PASSWORD -->
+        <div class="lead">Password Reset</div>
+        <?php render_input(["type" => "password", "id" => "cp", "name" => "currentPassword", "label" => "Current Password", "rules" => ["minlength" => 8]]); ?>
+        <?php render_input(["type" => "password", "id" => "np", "name" => "newPassword", "label" => "New Password", "rules" => ["minlength" => 8]]); ?>
+        <?php render_input(["type" => "password", "id" => "conp", "name" => "confirmPassword", "label" => "Confirm Password", "rules" => ["minlength" => 8]]); ?>
+        <?php render_input(["type" => "hidden", "name" => "save"]);/*lazy value to check if form submitted, not ideal*/ ?>
+        <?php render_button(["text" => "Update Profile", "type" => "submit"]); ?>
+    </form>
+</div>
 
 <script>
     function validate(form) {
-        let email= form.email.value;
-        let username= form.username.value;
-        let pwd= form.currentPassword.value;
+        let email = form.email.value;
+        let username = form.username.value;
+        let pwd = form.currentPassword.value;
         let pw = form.newPassword.value;
         let con = form.confirmPassword.value;
         var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -125,13 +113,11 @@ $username = get_username();
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
-        
+
         if (email === "") {
             flash("Email must not be empty [js]", "warning");
             isValid = false;
-        }
-
-        else if (!emailPattern.test(email)) {
+        } else if (!emailPattern.test(email)) {
             flash("Invalid email address [js]", "warning");
             isValid = false;
         }
@@ -139,25 +125,23 @@ $username = get_username();
         if (username === "") {
             flash("Username must not be empty [js]", "warning");
             isValid = false;
-        }
-
-        else if (!usernamePattern.test(username)) {
+        } else if (!usernamePattern.test(username)) {
             flash("Username must only contain 3-16 characters a-z, 0-9, _, or - [js]", "warning");
             isValid = false;
         }
 
-        if(pwd!==""){
+        if (pwd !== "") {
             if (pw === "") {
                 flash("New password must not be empty [js]", "warning");
                 isValid = false;
             }
-    
+
             // Check if new password meets minimum length requirement
-             else if (pw.length < 8) {
+            else if (pw.length < 8) {
                 flash("New password must be at least 8 characters long [js]", "warning");
                 isValid = false;
             }
-    
+
             // Check if confirm password is empty
             if (con === "") {
                 flash("Confirm password must not be empty [js]", "warning");
@@ -165,9 +149,9 @@ $username = get_username();
             }
 
             if (pw !== con) {
-            flash("Password and Confirm password must match [js]", "warning");
-            isValid = false;
-        }
+                flash("Password and Confirm password must match [js]", "warning");
+                isValid = false;
+            }
         }
 
 
