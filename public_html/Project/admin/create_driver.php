@@ -20,6 +20,7 @@ if(isset($_POST["action"])){
             error_log("Data from API" . var_export($result, true));
             if($result){
                 $info=$result;
+                $info["is_api"] = 1;
             }
 
         }
@@ -57,10 +58,11 @@ if(isset($_POST["action"])){
     try{
         $stmt=$db->prepare($query);
         $stmt->execute($params);
-        flash("Inserted record" . $db->lastInsertId(), "success");
+        flash("Inserted record " . $db->lastInsertId(), "success");
     }
     catch(PDOException $e){
         error_log("Something broke with the query" . var_export($e, true));
+        flash("An error occured", "danger");
     }
 }
 
