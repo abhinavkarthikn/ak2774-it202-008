@@ -67,7 +67,7 @@ if(isset($_POST["action"])){
 //TODO handle manual create driver
 
 ?>
-<class="container-fluid">
+<div class="container-fluid">
     <h3>Create or Fetch Driver</h3>
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -75,6 +75,7 @@ if(isset($_POST["action"])){
         </li>
         <li class="nav-item">
             <a class="nav-link bg-warning" href="#" onclick="switchTab('fetch')">Create</a>
+        </li>
     </ul>
     <div id="fetch" class="tab-target">
     <form method="POST">
