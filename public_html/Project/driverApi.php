@@ -40,7 +40,7 @@ if(isset($_GET["search"])){
             }
 
             if($k==="highest_race_finish"){
-                $v=$v["position"];
+                $v=$v["number"];
             }
 
             if($k==="teams"){
