@@ -102,6 +102,9 @@ if($driver){
 ?>
 <div class="container-fluid">
     <h3>Edit Driver</h3>
+    <div>
+        <a href="<?php echo get_url("admin/list_drivers.php"); ?>" class="btn btn-secondary">Back</a>
+    </div>
     <form method="POST">
         <?php foreach($form as $k=>$v){
             render_input($v);
