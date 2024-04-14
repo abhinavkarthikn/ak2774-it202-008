@@ -61,8 +61,13 @@ if(isset($_POST["action"])){
         flash("Inserted record " . $db->lastInsertId(), "success");
     }
     catch(PDOException $e){
-        error_log("Something broke with the query" . var_export($e, true));
-        flash("An error occured", "danger");
+        if($e->errorInfo[1] === 1062){
+            flash("Driver already exists, please enter a different driver", "warning");
+        }
+        else{
+            error_log("Something broke with the query" . var_export($e, true));
+            flash("An error occured", "danger");
+        }
     }
 }
 
@@ -88,7 +93,7 @@ if(isset($_POST["action"])){
     </div>
 
     <div id="create" style="display: none;" class="tab-target">
-    <form method="POST">
+    <form method="POST" >
         <?php render_input(["type" => "text", "name" => "name", "placeholder" => "Driver Name", "label" => "Driver Name", "rules" => ["required" => "required"]]); ?>
         <?php render_input(["type" => "text", "name" => "abbr", "placeholder" => "Drive Abbr", "label" => "Driver Abbr", "rules" => ["required" => "required"]]); ?>
         <?php render_input(["type" => "text", "name" => "image", "placeholder" => "Image URL", "label" => "Image URL", "rules" => ["required" => "required"]]); ?>
@@ -120,7 +125,11 @@ if(isset($_POST["action"])){
             }
         }
     }
-</script>    
+
+</script>  
+
+
+
 
 <?php
 require_once(__DIR__ . "/../../../partials/flash.php");

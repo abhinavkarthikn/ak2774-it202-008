@@ -174,7 +174,9 @@ try {
 
 $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["id"], 
 "edit_url" => get_url("admin/edit_driver.php"),
-"delete_url" => get_url("admin/delete_driver.php")];
+"delete_url" => get_url("admin/delete_driver.php"),
+"view_url" => get_url("admin/view_driver.php")
+];
 ?>
 
 <div class="container-fluid">
