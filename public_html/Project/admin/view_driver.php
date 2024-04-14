@@ -28,8 +28,11 @@ else{
     die(header("Location: " . get_url("admin/list_drivers.php")));
 }
 ?>
-
+<div>
+    <a href="<?php echo get_url("admin/list_drivers.php"); ?>" class="btn btn-secondary">Back</a>
+</div>
 <div class="container mt-4 d-flex justify-content-center">
+    
     <div class="card" style="width: 18rem;">
         <?php if(!empty($driverData["image"])):?>
             <img src="<?php echo $driverData["image"];?>" class="card-img-top" alt="Driver Image">
