@@ -98,6 +98,10 @@ if (count($_GET) > 0) {
         $query .= " AND grands_prix_entered <= :grands_prix_entered_max";
         $params[":grands_prix_entered_max"] = $grands_prix_entered_max;
     }
+    if($grands_prix_entered_min > $grands_prix_entered_max){
+        flash("Min GPs must be less than Max GPs", "warning");
+    }
+
     //wc's range
     $world_championships_min = se($_GET, "world_championships_min", "-1", false);
     if (!empty($world_championships_min) && $world_championships_min > -1) {
@@ -109,6 +113,10 @@ if (count($_GET) > 0) {
         $query .= " AND world_championships <= :world_championships_max";
         $params[":world_championships_max"] = $world_championships_max;
     }
+    if($world_championships_min > $world_championships_max){
+        flash("Min WCs must be less than Max WCs", "warning");
+    }
+    
     //podiums range
     $podiums_min = se($_GET, "podiums_min", "-1", false);
     if (!empty($podiums_min) && $podiums_min > -1) {
@@ -120,6 +128,10 @@ if (count($_GET) > 0) {
         $query .= " AND podiums <= :podiums_max";
         $params[":podiums_max"] = $podiums_max;
     }
+    if($podiums_min > $podiums_max){
+        flash("Min Podiums must be less than Max Podiums", "warning");
+    }
+
     //points range
     $career_points_min = se($_GET, "career_points_min", "-1", false);
     if (!empty($career_points_min) && $career_points_min > -1) {
@@ -131,6 +143,10 @@ if (count($_GET) > 0) {
         $query .= " AND career_points <= :career_points_max";
         $params[":career_points_max"] = $career_points_max;
     }
+    if($career_points_min > $career_points_max){
+        flash("Min Points must be less than Max Points", "warning");
+    }
+
     //sort and order
     $sort = se($_GET, "sort", "grands_prix_entered", false);
     if (!in_array($sort, ["grands_prix_entered", "world_championships", "podiums", "career_points"])) {
@@ -181,7 +197,7 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
 
 <div class="container-fluid">
     <h3>List Drivers</h3>
-    <form method="GET">
+    <form method="GET" onsubmit="return validate(this);">
         <div class="row mb-3" style="align-items: flex-end;">
 
             <?php foreach ($form as $k => $v) : ?>
@@ -196,6 +212,44 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
     </form>
     <?php render_table($table); ?>
 </div>
+
+<script>
+    function validate(form){
+        let isValid=true;
+        
+        let minGPs = form.grands_prix_entered_min.value;
+        let maxGPs = form.grands_prix_entered_max.value;
+        if(minGPs > maxGPs){
+            flash("Min GPs must be less than Max GPs [js]", "warning");
+            isValid=false;
+        }
+        let minWCs = form.world_championships_min.value;
+        let maxWCs = form.world_championships_max.value;
+        if(minWCs > maxWCs){
+            flash("Min WCs must be less than Max WCs [js]", "warning");
+            isValid=false;
+        }
+        let minPodiums = form.podiums_min.value;
+        let maxPodiums = form.podiums_max.value;
+        if(minPodiums > maxPodiums){
+            flash("Min Podiums must be less than Max Podiums [js]", "warning");
+            isValid=false;
+        }
+        let minPoints = form.career_points_min.value;
+        let maxPoints = form.career_points_max.value;
+        if(minPoints > maxPoints){
+            flash("Min Points must be less than Max Points [js]", "warning");
+            isValid=false;
+        }
+        return isValid;
+    }
+
+    
+    </script>
+
+
+
+
 
 <?php
 require_once(__DIR__ . "/../../../partials/flash.php");

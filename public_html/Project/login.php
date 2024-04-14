@@ -53,7 +53,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     //TODO 3
     $hasError = false;
     if (empty($email)) {
-        flash("Email must be provided <br>");
+        flash("Email must be provided");
         $hasError = true;
     }
     //sanitize
