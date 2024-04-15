@@ -20,13 +20,16 @@ $form = [
     ["type" => "number", "name" => "world_championships_min", "placeholder" => "Min WCs", "label" => "Min WCs", "include_margin" => false],
     ["type" => "number", "name" => "world_championships_max", "placeholder" => "Max WCs", "label" => "Max WCs", "include_margin" => false],
 
+    ["type" => "number", "name" => "highest_race_finish_min", "placeholder" => "Min Wins", "label" => "Min Wins", "include_margin" => false],
+    ["type" => "number", "name" => "highest_race_finish_max", "placeholder" => "Max Wins", "label" => "Max Wins", "include_margin" => false],
+
     ["type" => "number", "name" => "podiums_min", "placeholder" => "Min Podiums", "label" => "Min Podiums", "include_margin" => false],
     ["type" => "number", "name" => "podiums_max", "placeholder" => "Max Podiums", "label" => "Max Podiums", "include_margin" => false],
 
     ["type" => "number", "name" => "career_points_min", "placeholder" => "Min Points", "label" => "Min Points", "include_margin" => false],
     ["type" => "number", "name" => "career_points_max", "placeholder" => "Max Points", "label" => "Max Points", "include_margin" => false],
 
-    ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["grands_prix_entered" => "GPs", "world_championships" => "WCs", "podiums" => "Podiums", "career_points" => "Points"], "include_margin" => false],
+    ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["grands_prix_entered" => "GPs", "world_championships" => "WCs", "highest_race_finish" => "Wins", "podiums" => "Podiums", "career_points" => "Points"], "include_margin" => false],
     ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
 
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false]
@@ -98,7 +101,7 @@ if (count($_GET) > 0) {
         $query .= " AND grands_prix_entered <= :grands_prix_entered_max";
         $params[":grands_prix_entered_max"] = $grands_prix_entered_max;
     }
-    if($grands_prix_entered_min > $grands_prix_entered_max){
+    if($grands_prix_entered_min > $grands_prix_entered_max && !empty($grands_prix_entered_min) && !empty($grands_prix_entered_max)){
         flash("Min GPs must be less than Max GPs", "warning");
     }
 
@@ -113,8 +116,23 @@ if (count($_GET) > 0) {
         $query .= " AND world_championships <= :world_championships_max";
         $params[":world_championships_max"] = $world_championships_max;
     }
-    if($world_championships_min > $world_championships_max){
+    if($world_championships_min > $world_championships_max && !empty($world_championships_min) && !empty($world_championships_max)){
         flash("Min WCs must be less than Max WCs", "warning");
+    }
+
+    //wins range
+    $highest_race_finish_min= se($_GET, "highest_race_finish_min", "-1", false);
+    if(!empty($highest_race_finish_min) && $highest_race_finish_min > -1){
+        $query .= " AND highest_race_finish >= :highest_race_finish_min";
+        $params[":highest_race_finish_min"] = $highest_race_finish_min;
+    }
+    $highest_race_finish_max= se($_GET, "highest_race_finish_max", "-1", false);
+    if(!empty($highest_race_finish_max) && $highest_race_finish_max > -1){
+        $query .= " AND highest_race_finish <= :highest_race_finish_max";
+        $params[":highest_race_finish_max"] = $highest_race_finish_max;
+    }
+    if($highest_race_finish_min > $highest_race_finish_max && !empty($highest_race_finish_min) && !empty($highest_race_finish_max)){
+        flash("Min Wins must be less than Max Wins", "warning");
     }
     
     //podiums range
@@ -128,7 +146,7 @@ if (count($_GET) > 0) {
         $query .= " AND podiums <= :podiums_max";
         $params[":podiums_max"] = $podiums_max;
     }
-    if($podiums_min > $podiums_max){
+    if($podiums_min > $podiums_max && !empty($podiums_min) && !empty($podiums_max)){
         flash("Min Podiums must be less than Max Podiums", "warning");
     }
 
@@ -143,13 +161,13 @@ if (count($_GET) > 0) {
         $query .= " AND career_points <= :career_points_max";
         $params[":career_points_max"] = $career_points_max;
     }
-    if($career_points_min > $career_points_max){
+    if($career_points_min > $career_points_max && !empty($career_points_min) && !empty($career_points_max)){
         flash("Min Points must be less than Max Points", "warning");
     }
 
     //sort and order
     $sort = se($_GET, "sort", "grands_prix_entered", false);
-    if (!in_array($sort, ["grands_prix_entered", "world_championships", "podiums", "career_points"])) {
+    if (!in_array($sort, ["grands_prix_entered", "world_championships", "highest_race_finish", "podiums", "career_points"])) {
         $sort = "grands_prix_entered";
     }
     $order = se($_GET, "order", "desc", false);
@@ -184,7 +202,7 @@ try {
         $results = $r;
     }
 } catch (PDOException $e) {
-    error_log("Error detching drivers " . var_export($e, true));
+    error_log("Error fetching drivers " . var_export($e, true));
     flash("Unhandled error occured ", "danger");
 }
 
@@ -217,27 +235,35 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
     function validate(form){
         let isValid=true;
         
-        let minGPs = form.grands_prix_entered_min.value;
-        let maxGPs = form.grands_prix_entered_max.value;
-        if(minGPs > maxGPs){
+        let minGPs = parseInt(form.grands_prix_entered_min.value);
+        let maxGPs = parseInt(form.grands_prix_entered_max.value);
+        if(minGPs > maxGPs && minGPs!="" && maxGPs!=""){
             flash("Min GPs must be less than Max GPs [js]", "warning");
             isValid=false;
         }
-        let minWCs = form.world_championships_min.value;
-        let maxWCs = form.world_championships_max.value;
-        if(minWCs > maxWCs){
+        let minWCs = parseInt(form.world_championships_min.value);
+        let maxWCs = parseInt(form.world_championships_max.value);
+        if(minWCs > maxWCs && minWCs!="" && maxWCs!=""){
             flash("Min WCs must be less than Max WCs [js]", "warning");
             isValid=false;
         }
-        let minPodiums = form.podiums_min.value;
-        let maxPodiums = form.podiums_max.value;
-        if(minPodiums > maxPodiums){
+
+        let minWins=parseInt(form.highest_race_finish_min.value);
+        let maxWins=parseInt(form.highest_race_finish_max.value);
+        if(minWins > maxWins && minWins!="" && maxWins!=""){
+            flash("Min Wins must be less than Max Wins [js]", "warning");
+            isValid=false;
+        }
+
+        let minPodiums = parseInt(form.podiums_min.value);
+        let maxPodiums = parseInt(form.podiums_max.value);
+        if(minPodiums > maxPodiums && minPodiums!="" && maxPodiums!=""){
             flash("Min Podiums must be less than Max Podiums [js]", "warning");
             isValid=false;
         }
-        let minPoints = form.career_points_min.value;
-        let maxPoints = form.career_points_max.value;
-        if(minPoints > maxPoints){
+        let minPoints = parseInt(form.career_points_min.value);
+        let maxPoints = parseInt(form.career_points_max.value);
+        if(minPoints > maxPoints && minPoints!="" && maxPoints!=""){
             flash("Min Points must be less than Max Points [js]", "warning");
             isValid=false;
         }

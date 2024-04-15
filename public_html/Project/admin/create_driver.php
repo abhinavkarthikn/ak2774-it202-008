@@ -82,7 +82,7 @@ if(isset($_POST["action"])){
         }
         $highest_race_finish=se($info, "highest_race_finish", "", false);
         if(empty($highest_race_finish)){
-            flash("You must provide a highest race finish", "warning");
+            flash("You must provide a number of wins", "warning");
         }
         $highest_grid_position=se($info, "highest_grid_position", "", false);
         if(empty($highest_grid_position)){
@@ -162,7 +162,7 @@ if(isset($_POST["action"])){
         <?php render_input(["type" => "number", "name" => "grands_prix_entered", "placeholder" => "GPs Entered", "label" => "GPs Entered", "rules" => ["required" => "required"]]); ?>
         <?php render_input(["type" => "number", "name" => "world_championships", "placeholder" => "WCs", "label" => "World Championships", "rules" => ["required" => "required"]]); ?>
         <?php render_input(["type" => "number", "name" => "podiums", "placeholder" => "Podiums", "label" => "Podiums", "rules" => ["required" => "required"]]); ?>
-        <?php render_input(["type" => "number", "name" => "highest_race_finish", "placeholder" => "Highest race finish", "label" => "Highest Race Finish", "rules" => ["required" => "required"]]); ?>
+        <?php render_input(["type" => "number", "name" => "highest_race_finish", "placeholder" => "Wins", "label" => "Wins", "rules" => ["required" => "required"]]); ?>
         <?php render_input(["type" => "number", "name" => "highest_grid_position", "placeholder" => "Highest grid position", "label" => "Highest Grid Position", "rules" => ["required" => "required"]]); ?>
         <?php render_input(["type" => "number", "name" => "career_points", "placeholder" => "Career Points", "label" => "Career Points", "rules" => ["required" => "required"]]); ?>
 
@@ -241,7 +241,7 @@ if(isset($_POST["action"])){
         }
         let highest_race_finish=form.highest_race_finish.value;
         if(highest_race_finish===""){
-            flash("Highest race finish must not be empty [js]", "danger");
+            flash("Wins must not be empty [js]", "danger");
             isValid=false;
         }
         let highest_grid_position=form.highest_grid_position.value;

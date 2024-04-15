@@ -54,24 +54,24 @@ if(isset($_POST["name"])){
     if(empty($grands_prix_entered)){
         flash("GPs Entered must not be empty", "warning");
     }
-    $world_championships=se($info, "world_championships", "", false);
-    if(empty($world_championships)){
+    $world_championships=se($info, "world_championships", "-1", false);
+    if(empty($world_championships) && $world_championships<-1){
         flash("World Championships must not be empty", "warning");
     }
-    $podiums=se($info, "podiums", "", false);
-    if(empty($podiums)){
+    $podiums=se($info, "podiums", "-1", false);
+    if(empty($podiums) && $podiums<-1){
         flash("Podiums must not be empty", "warning");
     }
-    $highest_race_finish=se($info, "highest_race_finish", "", false);
-    if(empty($highest_race_finish)){
-        flash("Highest race finish must not be empty", "warning");
+    $highest_race_finish=se($info, "highest_race_finish", "-1", false);
+    if(empty($highest_race_finish) && $highest_race_finish<-1){
+        flash("Wins must not be empty", "warning");
     }
     $highest_grid_position=se($info, "highest_grid_position", "", false);
     if(empty($highest_grid_position)){
         flash("Highest Grid Position must not be empty", "warning");
     }
-    $career_points=se($info, "career_points", "", false);
-    if(empty($career_points)){
+    $career_points=se($info, "career_points", "-1", false);
+    if(empty($career_points) && $career_points<-1){
         flash("Career Points must not be empty", "warning");
     }
 
@@ -143,7 +143,7 @@ if($driver){
     ["type" => "number", "name" => "grands_prix_entered", "placeholder" => "GPs Entered", "label" => "GPs Entered", "rules" => ["required" => "required"]],
     ["type" => "number", "name" => "world_championships", "placeholder" => "WCs", "label" => "World Championships", "rules" => ["required" => "required"]],
     ["type" => "number", "name" => "podiums", "placeholder" => "Podiums", "label" => "Podiums", "rules" => ["required" => "required"]],
-    ["type" => "number", "name" => "highest_race_finish", "placeholder" => "Highest race finish", "label" => "Highest Race Finish", "rules" => ["required" => "required"]],
+    ["type" => "number", "name" => "highest_race_finish", "placeholder" => "Wins", "label" => "Wins", "rules" => ["required" => "required"]],
     ["type" => "number", "name" => "highest_grid_position", "placeholder" => "Highest grid position", "label" => "Highest Grid Position", "rules" => ["required" => "required"]],
     ["type" => "number", "name" => "career_points", "placeholder" => "Career Points", "label" => "Career Points", "rules" => ["required" => "required"]]];
 

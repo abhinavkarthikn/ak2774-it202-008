@@ -45,6 +45,7 @@ else{
             <p class="card-text">Country: <?php safer_echo($driverData["country"]);?></p>
             <p class="card-text">GP's Entered: <?php safer_echo($driverData["grands_prix_entered"]);?></p>
             <p class="card-text">World Championships: <?php safer_echo($driverData["world_championships"]);?></p>
+            <p class="card-text">Wins: <?php safer_echo($driverData["highest_race_finish"]);?></p>
             <p class="card-text">Podiums: <?php safer_echo($driverData["podiums"]);?></p>
             <p class="card-text">Career Points: <?php safer_echo($driverData["career_points"]);?></p>
         </div>
