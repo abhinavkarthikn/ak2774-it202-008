@@ -14,7 +14,7 @@ if($id<1){
 }
 
 $db=getDB();
-$query="DELETE FROM `Drivers` WHERE id=:id";
+$query="DELETE FROM `Drivers` WHERE id=:id";  //ak2774, 4/15/2024
 try{
     $stmt=$db->prepare($query);
     $stmt->execute([":id"=>$id]);
