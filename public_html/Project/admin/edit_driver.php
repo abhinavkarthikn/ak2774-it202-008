@@ -12,13 +12,14 @@ $id = se($_GET, "id", -1, false);
 //TODO handle driver fetch
 if(isset($_POST["name"])){
     foreach($_POST as $k=>$v){
-        if(!in_array($k,["name", "abbr", "image", "nationality", "country", "birthdate", "birthplace", "number", "grands_prix_entered", "world_championships", "podiums", "highest_race_finish", "highest_grid_position", "career_points" ] )){
+        if(!in_array($k,["name", "abbr", "image", "nationality", "country", "birthdate", "birthplace", "number", "grands_prix_entered", 
+        "world_championships", "podiums", "highest_race_finish", "highest_grid_position", "career_points" ] )){
             unset($_POST[$k]);
         }
         $info=$_POST;
     }
 
-    $name=se($info, "name", "", false);
+    $name=se($info, "name", "", false);   //ak2774, 4/15/2024
     if(empty($name)){
         flash("Name must not be empty", "warning");
     }
@@ -50,7 +51,7 @@ if(isset($_POST["name"])){
     if(empty($number)){
         flash("Number must not be empty", "warning");
     }
-    $grands_prix_entered=se($info, "grands_prix_entered", "", false);
+    $grands_prix_entered=se($info, "grands_prix_entered", "", false);   //ak2774, 4/15/2024
     if(empty($grands_prix_entered)){
         flash("GPs Entered must not be empty", "warning");
     }
@@ -72,7 +73,7 @@ if(isset($_POST["name"])){
     }
     $career_points=se($info, "career_points", "-1", false);
     if(empty($career_points) && $career_points<-1){
-        flash("Career Points must not be empty", "warning");
+        flash("Career Points must not be empty", "warning");  //ak2774, 4/15/2024
     }
 
     //Insert Data
@@ -112,11 +113,12 @@ $driver=[];
 if($id>-1){
     //fetch
     $db=getDB();
-    $query="SELECT name, abbr, image, nationality, country, birthdate, birthplace, number, grands_prix_entered, world_championships, podiums, highest_race_finish, highest_grid_position, career_points FROM `Drivers` WHERE id=:id";
+    $query="SELECT name, abbr, image, nationality, country, birthdate, birthplace, number, grands_prix_entered, world_championships, 
+    podiums, highest_race_finish, highest_grid_position, career_points FROM `Drivers` WHERE id=:id";
     
     try{
         $stmt=$db->prepare($query);
-        $stmt->execute([":id"=>$id]);
+        $stmt->execute([":id"=>$id]);    //ak2774, 4/15/2024
         $r=$stmt->fetch();
         if($r){
             $driver=$r;
@@ -150,7 +152,7 @@ if($driver){
     $keys=array_keys($driver);
     foreach($form as $k=>$v){
         if(in_array($v["name"], $keys)){
-            $form[$k]["value"]=$driver[$v["name"]];
+            $form[$k]["value"]=$driver[$v["name"]];   //ak2774, 4/15/2024
         }
     }
 }
@@ -177,7 +179,7 @@ if($driver){
         
         let name=form.name.value;
         if(name===""){
-            flash("Name must not be empty [js]", "warning");
+            flash("Name must not be empty [js]", "warning");  //ak2774, 4/15/2024
             isValid=false;
         }
         let abbr=form.abbr.value;
@@ -207,7 +209,7 @@ if($driver){
         }
         let birthplace=form.birthplace.value;
         if(birthplace===""){
-            flash("Birthplace must not be empty [js]", "warning");
+            flash("Birthplace must not be empty [js]", "warning");  //ak2774, 4/15/2024
             isValid=false;
         }
         let number=form.number.value;
@@ -237,7 +239,7 @@ if($driver){
         }
         let highest_grid_position=form.highest_grid_position.value;
         if(highest_grid_position===""){
-            flash("Highest Grid Position must not be empty [js]", "warning");
+            flash("Highest Grid Position must not be empty [js]", "warning");  //ak2774, 4/15/2024
             isValid=false;
         }
         let career_points=form.career_points.value;

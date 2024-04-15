@@ -3,7 +3,7 @@
 require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
-    flash("You do not have permission to view this page", "warning");
+    flash("You do not have permission to view this page", "warning");  //ak2774, 4/15/2024
     die(header("location: $BASE_PATH" . "/home.php"));
 }
 
@@ -23,13 +23,14 @@ $form = [
     ["type" => "number", "name" => "highest_race_finish_min", "placeholder" => "Min Wins", "label" => "Min Wins", "include_margin" => false],
     ["type" => "number", "name" => "highest_race_finish_max", "placeholder" => "Max Wins", "label" => "Max Wins", "include_margin" => false],
 
-    ["type" => "number", "name" => "podiums_min", "placeholder" => "Min Podiums", "label" => "Min Podiums", "include_margin" => false],
+    ["type" => "number", "name" => "podiums_min", "placeholder" => "Min Podiums", "label" => "Min Podiums", "include_margin" => false],  //ak2774, 4/15/2024
     ["type" => "number", "name" => "podiums_max", "placeholder" => "Max Podiums", "label" => "Max Podiums", "include_margin" => false],
 
     ["type" => "number", "name" => "career_points_min", "placeholder" => "Min Points", "label" => "Min Points", "include_margin" => false],
     ["type" => "number", "name" => "career_points_max", "placeholder" => "Max Points", "label" => "Max Points", "include_margin" => false],
 
-    ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["grands_prix_entered" => "GPs", "world_championships" => "WCs", "highest_race_finish" => "Wins", "podiums" => "Podiums", "career_points" => "Points"], "include_margin" => false],
+    ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["grands_prix_entered" => "GPs", "world_championships" => "WCs", 
+    "highest_race_finish" => "Wins", "podiums" => "Podiums", "career_points" => "Points"], "include_margin" => false],
     ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
 
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false]
@@ -41,7 +42,8 @@ $form = [
 
 
 
-$query = "SELECT id, name, abbr, image, nationality, country, birthdate, birthplace, number, grands_prix_entered, world_championships, podiums, highest_race_finish, highest_grid_position, career_points FROM `Drivers` WHERE 1=1";
+$query = "SELECT id, name, abbr, image, nationality, country, birthdate, birthplace, number, grands_prix_entered, world_championships, podiums, 
+highest_race_finish, highest_grid_position, career_points FROM `Drivers` WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear=isset($_GET["clear"]);
@@ -51,7 +53,7 @@ if($is_clear){
     die(header("Location: " . $session_key));
 }
 else{
-    $session_data = session_load($session_key);
+    $session_data = session_load($session_key);     //ak2774, 4/15/2024
 }
 
 if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
@@ -77,7 +79,7 @@ if (count($_GET) > 0) {
     }
     $nationality = se($_GET, "nationality", "", false);
     if (!empty($nationality)) {
-        $query .= " AND nationality LIKE :nationality";
+        $query .= " AND nationality LIKE :nationality";   //ak2774, 4/15/2024
         $params[":nationality"] = "%$nationality%";
     }
     $country = se($_GET, "country", "", false);
@@ -111,7 +113,7 @@ if (count($_GET) > 0) {
         $query .= " AND world_championships >= :world_championships_min";
         $params[":world_championships_min"] = $world_championships_min;
     }
-    $world_championships_max = se($_GET, "world_championships_max", "-1", false);
+    $world_championships_max = se($_GET, "world_championships_max", "-1", false);   //ak2774, 4/15/2024
     if (!empty($world_championships_max) && $world_championships_max > -1) {
         $query .= " AND world_championships <= :world_championships_max";
         $params[":world_championships_max"] = $world_championships_max;
@@ -146,7 +148,7 @@ if (count($_GET) > 0) {
         $query .= " AND podiums <= :podiums_max";
         $params[":podiums_max"] = $podiums_max;
     }
-    if($podiums_min > $podiums_max && !empty($podiums_min) && !empty($podiums_max)){
+    if($podiums_min > $podiums_max && !empty($podiums_min) && !empty($podiums_max)){  //ak2774, 4/15/2024
         flash("Min Podiums must be less than Max Podiums", "warning");
     }
 
@@ -170,7 +172,7 @@ if (count($_GET) > 0) {
     if (!in_array($sort, ["grands_prix_entered", "world_championships", "highest_race_finish", "podiums", "career_points"])) {
         $sort = "grands_prix_entered";
     }
-    $order = se($_GET, "order", "desc", false);
+    $order = se($_GET, "order", "desc", false);    //ak2774, 4/15/2024
     if (!in_array($order, ["asc", "desc"])) {
         $order = "desc";
     }
@@ -197,7 +199,7 @@ $stmt = $db->prepare($query);
 $results = [];
 try {
     $stmt->execute($params);
-    $r = $stmt->fetchAll();
+    $r = $stmt->fetchAll();   //ak2774, 4/15/2024
     if ($r) {
         $results = $r;
     }
@@ -225,7 +227,7 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
             <?php endforeach; ?>
 
         </div>
-        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
+        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); //ak2774, 4/15/2024?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
     <?php render_table($table); ?>
@@ -244,7 +246,7 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
         let minWCs = parseInt(form.world_championships_min.value);
         let maxWCs = parseInt(form.world_championships_max.value);
         if(minWCs > maxWCs && minWCs!="" && maxWCs!=""){
-            flash("Min WCs must be less than Max WCs [js]", "warning");
+            flash("Min WCs must be less than Max WCs [js]", "warning"); //ak2774, 4/15/2024
             isValid=false;
         }
 
@@ -258,7 +260,7 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
         let minPodiums = parseInt(form.podiums_min.value);
         let maxPodiums = parseInt(form.podiums_max.value);
         if(minPodiums > maxPodiums && minPodiums!="" && maxPodiums!=""){
-            flash("Min Podiums must be less than Max Podiums [js]", "warning");
+            flash("Min Podiums must be less than Max Podiums [js]", "warning");  //ak2774, 4/15/2024
             isValid=false;
         }
         let minPoints = parseInt(form.career_points_min.value);

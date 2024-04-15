@@ -18,7 +18,7 @@ if(isset($_POST["action"])){
         if($action==="fetch"){
             $result=fetch_driver($name);
             error_log("Data from API" . var_export($result, true));
-            if($result){
+            if($result){                            //ak2774, 4/15/2024
                 $info=$result;
                 $info["is_api"] = 1;
             }
@@ -26,7 +26,8 @@ if(isset($_POST["action"])){
         }
         else if($action==="create"){
             foreach($_POST as $k=>$v){
-                if(!in_array($k,["name", "abbr", "image", "nationality", "country", "birthdate", "birthplace", "number", "grands_prix_entered", "world_championships", "podiums", "highest_race_finish", "highest_grid_position", "career_points" ] )){
+                if(!in_array($k,["name", "abbr", "image", "nationality", "country", "birthdate", "birthplace", "number", 
+                "grands_prix_entered", "world_championships", "podiums", "highest_race_finish", "highest_grid_position", "career_points" ] )){
                     unset($_POST[$k]);
                 }
                 $info=$_POST;
@@ -54,7 +55,7 @@ if(isset($_POST["action"])){
         }
         $country=se($info, "country", "", false);
         if(empty($country)){
-            flash("You must provide a country", "warning");
+            flash("You must provide a country", "warning");     //ak2774, 4/15/2024
         }
         $birthdate=se($info, "birthdate", "", false);
         if(empty($birthdate)){
@@ -80,7 +81,7 @@ if(isset($_POST["action"])){
         if(empty($podiums)){
             flash("You must provide a number of podiums", "warning");
         }
-        $highest_race_finish=se($info, "highest_race_finish", "", false);
+        $highest_race_finish=se($info, "highest_race_finish", "", false);    //ak2774, 4/15/2024
         if(empty($highest_race_finish)){
             flash("You must provide a number of wins", "warning");
         }
@@ -119,7 +120,7 @@ if(isset($_POST["action"])){
     }
     catch(PDOException $e){
         if($e->errorInfo[1] === 1062){
-            flash("Driver already exists, please enter a different driver", "warning");
+            flash("Driver already exists, please enter a different driver", "warning");  //ak2774, 4/15/2024
         }
         else{
             error_log("Something broke with the query" . var_export($e, true));
@@ -145,7 +146,7 @@ if(isset($_POST["action"])){
     <form method="POST">
         <?php render_input(["type" => "search", "name" => "name", "placeholder" => "Driver name", "rules" => ["required" => "required"]]); ?>
         <?php render_input(["type" => "hidden", "name" => "action", "value" => "fetch"]); ?>
-        <?php render_button(["text" => "Search", "type" => "submit",]); ?>
+        <?php render_button(["text" => "Search", "type" => "submit",]); //ak2774, 4/15/2024?>   
     </form>
     </div>
 
@@ -178,7 +179,7 @@ if(isset($_POST["action"])){
         if(target){
             let eles=document.getElementsByClassName("tab-target");
             for(let ele of eles){
-                ele.style.display=(ele.id===tab)? "none" : "block";
+                ele.style.display=(ele.id===tab)? "none" : "block";   //ak2774, 4/15/2024
             }
         }
     }
@@ -202,7 +203,7 @@ if(isset($_POST["action"])){
         }
         let nationality=form.nationality.value;
         if(nationality===""){
-            flash("Nationality must not be empty [js]", "danger");
+            flash("Nationality must not be empty [js]", "danger");     //ak2774, 4/15/2024
         }
         let country=form.country.value;
         if(country===""){
@@ -231,7 +232,7 @@ if(isset($_POST["action"])){
         }
         let world_championships=form.world_championships.value;
         if(world_championships===""){
-            flash("World Championships must not be empty [js]", "danger");
+            flash("World Championships must not be empty [js]", "danger");   //ak2774, 4/15/2024
             isValid=false;
         }
         let podiums=form.podiums.value;
@@ -251,7 +252,7 @@ if(isset($_POST["action"])){
         }
         let career_points=form.career_points.value;
         if(career_points===""){
-            flash("Career points must not be empty [js]", "danger");
+            flash("Career points must not be empty [js]", "danger");  //ak2774, 4/15/2024
             isValid=false;
         }
         return isValid;
