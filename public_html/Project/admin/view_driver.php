@@ -30,6 +30,8 @@ else{
 ?>
 <div>
     <a href="<?php echo get_url("admin/list_drivers.php"); ?>" class="btn btn-secondary">Back</a>
+    <a href="<?php echo get_url("admin/edit_driver.php?id=" . $id); ?>" class="btn btn-primary">Edit</a>
+    <a href="<?php echo get_url("admin/delete_driver.php?id=" . $id); ?>" class="btn btn-danger">Delete</a>
 </div>
 <div class="container mt-4 d-flex justify-content-center">
     
