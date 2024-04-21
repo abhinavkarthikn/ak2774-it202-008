@@ -4,13 +4,13 @@ session_start();
 require_once(__DIR__ . "/../../../lib/functions.php");
 if(!has_role("Admin")){
     flash("You do not have permission to view this page", "warning");
-    die(header("location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 
 $id=se($_GET, "id", -1, false);
 if($id<1){
     flash("Invalid id passed to delete", "danger");
-    die(header("Location: " . get_url("admin/list_drivers.php")));
+    redirect("admin/list_drivers.php");
 }
 
 $db=getDB();
@@ -25,4 +25,4 @@ catch(PDOException $e){
     flash("Error deleting record", "danger");
     
 }
-die(header("Location: " . get_url("admin/list_drivers.php")));
+redirect("admin/list_drivers.php");
