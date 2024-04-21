@@ -17,7 +17,7 @@ if(isset($_GET["driver_id"]) && is_logged_in()){
         else{
             flash("Unhandled error occured", "danger");
         }
-        error_log("Error viewing driver: " . var_export($e, true));
+        error_log("Error adding driver: " . var_export($e, true));
     }
 }
 
