@@ -7,6 +7,11 @@ if (!isset($driver)) {
 
 <?php if(isset($driver)) : ?>
     <div class="card" style="width: 18rem;">
+        <?php if(isset($driver["username"])) : ?>
+            <div class="card-header">
+                Owned By: <?php se($driver, "username","N/A");?>
+            </div>
+        <?php endif; ?>
         <?php if(!empty($driver["image"])):?>
             <img src="<?php echo $driver["image"];?>" class="card-img-top" alt="Driver Image">
         <?php endif;?>
@@ -21,9 +26,10 @@ if (!isset($driver)) {
             <p class="card-text">Wins: <?php safer_echo($driver["highest_race_finish"]);?></p>
             <p class="card-text">Podiums: <?php safer_echo($driver["podiums"]);?></p>
             <p class="card-text">Career Points: <?php safer_echo($driver["career_points"]);?></p>
-            <?php //if(!isset($driver["user_id"])) : ?>
-                <a href="<?php echo get_url('api/detail_driver.php?driver_id=' .$driver["id"]); ?>" class="card-link">Add Driver</a>
-            <?php //endif; ?>
+            <?php if(!isset($driver["user_id"])) : ?>
+                <a class="btn btn-secondary" href="<?php echo get_url('api/detail_driver.php?driver_id=' .$driver["id"]); ?>" class="card-link">Add Driver</a>
+            <?php endif; ?>
+            <a class="btn btn-secondary" href="<?php echo get_url('driver.php?id=' .$driver["id"]); ?>" class="card-link">View Driver</a>
         </div>
     </div>
 <?php endif; ?>

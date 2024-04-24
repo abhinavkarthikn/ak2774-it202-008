@@ -34,12 +34,12 @@ $form = [
 
 ];
 
-$total_records=get_total_count("`Drivers` d LEFT JOIN `UserDrivers` ud on d.id=ud.driver_id");
+$total_records=get_total_count("`Drivers` d WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`)");
 
 
 
-$query = "SELECT u.username, u.id, d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d
-LEFT JOIN `UserDrivers` ud on d.id=ud.driver_id LEFT JOIN Users u on u.id=ud.user_id WHERE 1=1";
+$query = "SELECT d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points FROM `Drivers` d
+WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`)";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear=isset($_GET["clear"]);
@@ -204,14 +204,13 @@ try {
     flash("Unhandled error occured ", "danger");
 }
 
-
 $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["id"], 
 "view_url" => get_url("driver.php")
 ];
 ?>
 
 <div class="container-fluid">
-    <h3>Drivers</h3>
+    <h3>Available Drivers</h3>
     <form method="GET" onsubmit="return validate(this);">
         <div class="row mb-3" style="align-items: flex-end;">
 
