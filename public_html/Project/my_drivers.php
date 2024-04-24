@@ -1,9 +1,27 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 
+$db=getDB();
+
+//remove all associations
+if(isset($_GET["remove"])){
+    $query="DELETE FROM `UserDrivers` WHERE user_id=:user_id";
+    try{
+        $stmt=$db->prepare($query);
+        $stmt->execute([":user_id"=>get_user_id()]);
+        flash("All drivers removed", "success");
+    }
+    catch(PDOException $e){
+        error_log("Error removing all drivers: " . var_export($e, true));
+        flash("Error removing all drivers", "danger");
+        
+    }
+
+    redirect("my_drivers.php");
+}
+
 $form = [
     ["type" => "text", "name" => "name", "placeholder" => "Name", "label" => "Name", "include_margin" => false],
-    ["type" => "text", "name" => "nationality", "placeholder" => "Nationality", "label" => "Nationality", "include_margin" => false],
     ["type" => "text", "name" => "country", "placeholder" => "Country", "label" => "Country", "include_margin" => false],
     ["type" => "number", "name" => "number", "placeholder" => "Driver #", "label" => "Driver #", "include_margin" => false],
 
@@ -33,6 +51,8 @@ $form = [
 
 ];
 //error_log("Form data:" . var_export($form, true));
+
+$total_records=get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.driver_id WHERE user_id=:user_id", [":user_id"=>get_user_id()]);
 
 
 $query = "SELECT d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
@@ -69,11 +89,6 @@ if (count($_GET) > 0) {
         $params[":name"] = "%$name%";
     }
 
-    $nationality = se($_GET, "nationality", "", false);
-    if (!empty($nationality)) {
-        $query .= " AND nationality LIKE :nationality";
-        $params[":nationality"] = "%$nationality%";
-    }
 
     $country = se($_GET, "country", "", false);
     if (!empty($country)) {
@@ -171,7 +186,6 @@ if (count($_GET) > 0) {
     $query .= " LIMIT $limit";
 }
 
-$db = getDB();
 $stmt = $db->prepare($query);
 $results = [];
 try {
@@ -200,6 +214,9 @@ $table = [
 
 <div class="container-fluid">
     <h3>My Drivers</h3>
+    <div>
+        <a href="?remove" onclick="confirm('Are you sure')?'':event.preventDefault()" class="btn btn-danger">Remove All Drivers</a>
+    </div>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
 
@@ -213,12 +230,18 @@ $table = [
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
+    <?php render_result_counts(count($results), $total_records); ?>
     <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         <?php foreach ($results as $driver) : ?>
             <div class="col">
                 <?php render_driver_card($driver); ?>
             </div>
         <?php endforeach; ?>
+        <?php if(count($results)===0): ?>
+            <div class="col">
+                No results to show
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

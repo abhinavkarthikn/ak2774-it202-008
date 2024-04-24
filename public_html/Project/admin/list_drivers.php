@@ -37,6 +37,7 @@ $form = [
 
 ];
 
+$total_records=get_total_count("`Drivers`");
 
 
 
@@ -226,9 +227,10 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
             <?php endforeach; ?>
 
         </div>
-        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); //ak2774, 4/15/2024?>
+        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
+    <?php render_result_counts(count($results), $total_records); ?>
     <?php render_table($table); ?>
 </div>
 

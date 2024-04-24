@@ -21,4 +21,4 @@ if(isset($_GET["driver_id"]) && is_logged_in()){
     }
 }
 
-redirect("drivers.php");
+redirect("my_drivers.php");
