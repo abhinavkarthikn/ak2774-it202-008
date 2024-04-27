@@ -73,6 +73,7 @@ session_start();
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_driver.php'); ?>">Create Driver</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/list_drivers.php'); ?>">List Drivers</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/driver_associations.php'); ?>">Driver Association</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_drivers.php'); ?>">Assign Drivers</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>

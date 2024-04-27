@@ -43,7 +43,7 @@ $total_records=get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.dri
 
 
 $query = "SELECT u.username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
-JOIN `UserDrivers` ud ON d.id=ud.driver_id JOIN Users u on u.id=ud.user_id";
+JOIN `UserDrivers` ud ON d.id=ud.driver_id JOIN Users u on u.id=ud.user_id WHERE ud.is_active=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
@@ -203,6 +203,8 @@ $table = [
     "data" => $results, "title" => "Drivers", "ignored_columns" => ["id"],
     "view_url" => get_url("driver.php"),
 ];
+
+$remove="true";
 ?>
 
 <div class="container-fluid">
@@ -211,7 +213,7 @@ $table = [
         <div class="row mb-3" style="align-items: flex-end;">
 
             <?php foreach ($form as $k => $v) : ?>
-                <div class="col">
+                <div class="col col-2">
                     <?php render_input($v); ?>
                 </div>
             <?php endforeach; ?>
