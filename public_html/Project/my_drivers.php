@@ -20,6 +20,8 @@ if(isset($_GET["remove"])){
     redirect("my_drivers.php");
 }
 
+
+
 $form = [
     ["type" => "text", "name" => "name", "placeholder" => "Name", "label" => "Name", "include_margin" => false],
     ["type" => "text", "name" => "country", "placeholder" => "Country", "label" => "Country", "include_margin" => false],
@@ -235,6 +237,7 @@ $table = [
         <?php foreach ($results as $driver) : ?>
             <div class="col">
                 <?php render_driver_card($driver); ?>
+
             </div>
         <?php endforeach; ?>
         <?php if(count($results)===0): ?>

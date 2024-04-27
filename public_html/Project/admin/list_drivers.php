@@ -63,7 +63,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
 }
 
 
-if (count($_GET) > 0) {
+
     session_save($session_key, $_GET);
     $keys = array_keys($_GET);
 
@@ -189,7 +189,7 @@ if (count($_GET) > 0) {
     }
 
     $query .= " LIMIT $limit";
-}
+
 
 
 

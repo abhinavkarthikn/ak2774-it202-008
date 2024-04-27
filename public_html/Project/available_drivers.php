@@ -39,7 +39,10 @@ $total_records=get_total_count("`Drivers` d WHERE d.id NOT IN (SELECT driver_id 
 
 
 $query = "SELECT d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points FROM `Drivers` d
-WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`)";
+WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`) 
+UNION 
+SELECT c.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points FROM `Drivers` c 
+JOIN `UserDrivers` ud ON c.id=ud.driver_id WHERE ud.is_active=0";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear=isset($_GET["clear"]);
@@ -59,7 +62,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
 }
 
 
-if (count($_GET) > 0) {
+
     session_save($session_key, $_GET);
     $keys = array_keys($_GET);
 
@@ -185,7 +188,7 @@ if (count($_GET) > 0) {
     }
 
     $query .= " LIMIT $limit";
-}
+
 
 
 

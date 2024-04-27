@@ -9,7 +9,7 @@ if (!isset($driver)) {
     <div class="card" style="width: 18rem;">
         <?php if(isset($driver["username"])) : ?>
             <div class="card-header">
-                Owned By: <?php se($driver, "username","N/A");?>
+                Favorited By: <?php se($driver, "username","N/A");?>
             </div>
         <?php endif; ?>
         <?php if(!empty($driver["image"])):?>
@@ -28,6 +28,11 @@ if (!isset($driver)) {
             <p class="card-text">Career Points: <?php safer_echo($driver["career_points"]);?></p>
             <?php if(!isset($driver["user_id"])) : ?>
                 <a class="btn btn-secondary" href="<?php echo get_url('api/detail_driver.php?driver_id=' .$driver["id"]); ?>" class="card-link">Add Driver</a>
+            <?php endif; ?>
+            <?php if(isset($driver["user_id"])) : ?>
+                <?php if(has_role("Admin") && $remove="true") : ?>
+                    <a class="btn btn-danger" href="<?php echo get_url('remove_driver.php?user_id=' .$driver["user_id"] . '&driver_id=' .$driver["id"]); ?>" class="card-link">Remove Driver</a>
+                <?php endif; ?>
             <?php endif; ?>
             <a class="btn btn-secondary" href="<?php echo get_url('driver.php?id=' .$driver["id"]); ?>" class="card-link">View Driver</a>
         </div>
