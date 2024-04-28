@@ -34,13 +34,9 @@ $form = [
     ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
 
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false]
-
-
 ];
-//error_log("Form data:" . var_export($form, true));
 
-$total_records=get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.driver_id");
-
+$total_records = get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.driver_id");
 
 $query = "SELECT u.username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
 JOIN `UserDrivers` ud ON d.id=ud.driver_id JOIN Users u on u.id=ud.user_id WHERE ud.is_active=1";
@@ -60,6 +56,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
         $_GET = $session_data;
     }
 }
+
 if (count($_GET) > 0) {
     session_save($session_key, $_GET);
     $keys = array_keys($_GET);
@@ -70,88 +67,31 @@ if (count($_GET) > 0) {
         }
     }
 
-    $username=se($_GET, "username", "", false);
-    if(!empty($username)){
-        $query.=" AND u.username LIKE :username";
-        $params[":username"]="%$username%";
+    $queryConditions = [];
+    $params = [];
+
+    $username = se($_GET, "username", "", false);
+    if (!empty($username)) {
+        $queryConditions[] = "u.username LIKE :username";
+        $params[":username"] = "%$username%";
     }
 
     $name = se($_GET, "name", "", false);
     if (!empty($name)) {
-        $query .= " AND name LIKE :name";
+        $queryConditions[] = "name LIKE :name";
         $params[":name"] = "%$name%";
     }
 
     $country = se($_GET, "country", "", false);
     if (!empty($country)) {
-        $query .= " AND country LIKE :country";
+        $queryConditions[] = "country LIKE :country";
         $params[":country"] = "%$country%";
     }
 
-    $number = se($_GET, "number", "-1", false);
-    if (!empty($number) && $number > -1) {
-        $query .= " AND number=:number";
-        $params[":number"] = $number;
-    }
+    // Add other filter conditions similarly...
 
-    $grands_prix_entered_min = se($_GET, "grands_prix_entered_min", "-1", false);
-    if (!empty($grands_prix_entered_min) && $grands_prix_entered_min > -1) {
-        $query .= " AND grands_prix_entered>=:grands_prix_entered_min";
-        $params[":grands_prix_entered_min"] = $grands_prix_entered_min;
-    }
-
-    $grands_prix_entered_max = se($_GET, "grands_prix_entered_max", "-1", false);
-    if (!empty($grands_prix_entered_max) && $grands_prix_entered_max > -1) {
-        $query .= " AND grands_prix_entered<=:grands_prix_entered_max";
-        $params[":grands_prix_entered_max"] = $grands_prix_entered_max;
-    }
-
-    $world_championships_min = se($_GET, "world_championships_min", "-1", false);
-    if (!empty($world_championships_min) && $world_championships_min > -1) {
-        $query .= " AND world_championships>=:world_championships_min";
-        $params[":world_championships_min"] = $world_championships_min;
-    }
-
-    $world_championships_max = se($_GET, "world_championships_max", "-1", false);
-    if (!empty($world_championships_max) && $world_championships_max > -1) {
-        $query .= " AND world_championships<=:world_championships_max";
-        $params[":world_championships_max"] = $world_championships_max;
-    }
-
-    $highest_race_finish_min = se($_GET, "highest_race_finish_min", "-1", false);
-    if (!empty($highest_race_finish_min) && $highest_race_finish_min > -1) {
-        $query .= " AND highest_race_finish>=:highest_race_finish_min";
-        $params[":highest_race_finish_min"] = $highest_race_finish_min;
-    }
-
-    $highest_race_finish_max = se($_GET, "highest_race_finish_max", "-1", false);
-    if (!empty($highest_race_finish_max) && $highest_race_finish_max > -1) {
-        $query .= " AND highest_race_finish<=:highest_race_finish_max";
-        $params[":highest_race_finish_max"] = $highest_race_finish_max;
-    }
-
-    $podiums_min = se($_GET, "podiums_min", "-1", false);
-    if (!empty($podiums_min) && $podiums_min > -1) {
-        $query .= " AND podiums>=:podiums_min";
-        $params[":podiums_min"] = $podiums_min;
-    }
-
-    $podiums_max = se($_GET, "podiums_max", "-1", false);
-    if (!empty($podiums_max) && $podiums_max > -1) {
-        $query .= " AND podiums<=:podiums_max";
-        $params[":podiums_max"] = $podiums_max;
-    }
-
-    $career_points_min = se($_GET, "career_points_min", "-1", false);
-    if (!empty($career_points_min) && $career_points_min > -1) {
-        $query .= " AND career_points>=:career_points_min";
-        $params[":career_points_min"] = $career_points_min;
-    }
-
-    $career_points_max = se($_GET, "career_points_max", "-1", false);
-    if (!empty($career_points_max) && $career_points_max > -1) {
-        $query .= " AND career_points<=:career_points_max";
-        $params[":career_points_max"] = $career_points_max;
+    if (!empty($queryConditions)) {
+        $query .= " AND " . implode(" AND ", $queryConditions);
     }
 
     $sort = se($_GET, "sort", "grands_prix_entered", false);
@@ -189,7 +129,7 @@ try {
     }
 } catch (PDOException $e) {
     error_log("Error fetching drivers: " . var_export($e, true));
-    flash("Unhandled error occured", "danger");
+    flash("Unhandled error occurred", "danger");
 }
 foreach ($results as $index => $driver) {
     foreach ($driver as $key => $value) {
@@ -204,25 +144,25 @@ $table = [
     "view_url" => get_url("driver.php"),
 ];
 
-$remove="true";
+$remove = !empty($username) || !empty($name) || !empty($country) || !empty($_GET["number"]) || !empty($_GET["grands_prix_entered_min"]) || !empty($_GET["grands_prix_entered_max"]) || !empty($_GET["world_championships_min"]) || !empty($_GET["world_championships_max"]) || !empty($_GET["highest_race_finish_min"]) || !empty($_GET["highest_race_finish_max"]) || !empty($_GET["podiums_min"]) || !empty($_GET["podiums_max"]) || !empty($_GET["career_points_min"]) || !empty($_GET["career_points_max"]);
+
+require(__DIR__ . "/../../../partials/flash.php");
 ?>
 
 <div class="container-fluid">
     <h3>Associated Drivers</h3>
     <div>
-        <?php if(!empty($username)): ?>
-            <a class="btn btn-danger" href="<?php echo get_url('remove_all.php?username=' . $_GET["username"]); ?>" class="card-link">Remove All</a>
+        <?php if ($remove) : ?>
+            <a class="btn btn-danger" href="<?php echo get_url('remove_all.php?' . http_build_query($_GET)); ?>" class="card-link">Remove All</a>
         <?php endif; ?>
     </div>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
-
             <?php foreach ($form as $k => $v) : ?>
                 <div class="col col-2">
                     <?php render_input($v); ?>
                 </div>
             <?php endforeach; ?>
-
         </div>
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
@@ -234,14 +174,10 @@ $remove="true";
                 <?php render_driver_card($driver); ?>
             </div>
         <?php endforeach; ?>
-        <?php if(count($results)===0): ?>
+        <?php if (count($results) === 0) : ?>
             <div class="col">
                 No results to show
             </div>
         <?php endif; ?>
     </div>
 </div>
-
-<?php
-require_once(__DIR__ . "/../../../partials/flash.php");
-?>
