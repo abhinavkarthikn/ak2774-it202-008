@@ -9,7 +9,7 @@ if (!isset($driver)) {
     <div class="card" style="width: 18rem;">
         <?php if(isset($driver["username"])) : ?>
             <div class="card-header">
-                Favorited By: <?php se($driver, "username","N/A");?>
+            Favorited By: <a href="<?php echo get_url("profile.php?id=" .$driver["user_id"]); ?>"><?php se($driver, "username", "N/A"); ?></a>
             </div>
         <?php endif; ?>
         <?php if(!empty($driver["image"])):?>

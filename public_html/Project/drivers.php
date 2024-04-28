@@ -40,11 +40,13 @@ $form = [
 
 ];
 
+
+
 $total_records = get_total_count("`Drivers` d LEFT JOIN `UserDrivers` ud on d.id=ud.driver_id");
 
 
 
-$query = "SELECT u.username, u.id, d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d
+$query = "SELECT u.username, u.id, d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id, ud.is_active FROM `Drivers` d
 LEFT JOIN `UserDrivers` ud on d.id=ud.driver_id LEFT JOIN Users u on u.id=ud.user_id WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
@@ -238,9 +240,9 @@ $remove = "false";
         <?php foreach ($results as $driver) : ?>
             <div class="col">
                 <div class="card" style="width: 18rem;">
-                    <?php if (isset($driver["username"])) : ?>
+                    <?php if (isset($driver["username"]) && $driver["is_active"]!=0) : ?>
                         <div class="card-header">
-                            Favorited By: <?php se($driver, "username", "N/A"); ?>
+                            Favorited By: <a href="<?php echo get_url("profile.php?id=" .$driver["user_id"]); ?>"><?php se($driver, "username", "N/A"); ?></a>
                         </div>
                     <?php endif; ?>
                     <?php if (!empty($driver["image"])) : ?>
