@@ -57,8 +57,9 @@ $form = [
 $total_records=get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.driver_id WHERE user_id=:user_id", [":user_id"=>get_user_id()]);
 
 
-$query = "SELECT d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
-JOIN `UserDrivers` ud ON d.id=ud.driver_id WHERE user_id=:user_id";
+$query = "SELECT username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
+JOIN `UserDrivers` ud ON d.id=ud.driver_id LEFT JOIN Users u ON u.id=ud.user_id
+WHERE user_id=:user_id";
 $params = [":user_id" => get_user_id()];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
