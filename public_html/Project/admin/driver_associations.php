@@ -209,6 +209,11 @@ $remove="true";
 
 <div class="container-fluid">
     <h3>Associated Drivers</h3>
+    <div>
+        <?php if(!empty($username)): ?>
+            <a class="btn btn-danger" href="<?php echo get_url('remove_all.php?username=' . $_GET["username"]); ?>" class="card-link">Remove All</a>
+        <?php endif; ?>
+    </div>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
 
