@@ -1,11 +1,8 @@
 <?php
 
-require(__DIR__ . "/../../../partials/nav.php");
+require(__DIR__ . "/../../partials/nav.php");
 
-if (!has_role("Admin")) {
-    flash("You do not have permission to view this page", "warning");  //ak2774, 4/15/2024
-    redirect("home.php");
-}
+
 
 //build search form
 $form = [
@@ -37,13 +34,15 @@ $form = [
 
 ];
 
-$total_records=get_total_count("`Drivers`");
+$total_records=get_total_count("`Drivers` d WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`)");
 
 
 
-
-$query = "SELECT id, name, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, 
-highest_race_finish, career_points FROM `Drivers` WHERE 1=1";
+$query = "SELECT d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points FROM `Drivers` d
+WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`) 
+UNION 
+SELECT c.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points FROM `Drivers` c 
+JOIN `UserDrivers` ud ON c.id=ud.driver_id WHERE ud.is_active=0";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear=isset($_GET["clear"]);
@@ -53,7 +52,7 @@ if($is_clear){
     redirect($session_key);
 }
 else{
-    $session_data = session_load($session_key);     //ak2774, 4/15/2024
+    $session_data = session_load($session_key);     
 }
 
 if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
@@ -79,7 +78,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
     }
     $nationality = se($_GET, "nationality", "", false);
     if (!empty($nationality)) {
-        $query .= " AND nationality LIKE :nationality";   //ak2774, 4/15/2024
+        $query .= " AND nationality LIKE :nationality";   
         $params[":nationality"] = "%$nationality%";
     }
     $country = se($_GET, "country", "", false);
@@ -113,7 +112,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
         $query .= " AND world_championships >= :world_championships_min";
         $params[":world_championships_min"] = $world_championships_min;
     }
-    $world_championships_max = se($_GET, "world_championships_max", "-1", false);   //ak2774, 4/15/2024
+    $world_championships_max = se($_GET, "world_championships_max", "-1", false);   
     if (!empty($world_championships_max) && $world_championships_max > -1) {
         $query .= " AND world_championships <= :world_championships_max";
         $params[":world_championships_max"] = $world_championships_max;
@@ -148,7 +147,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
         $query .= " AND podiums <= :podiums_max";
         $params[":podiums_max"] = $podiums_max;
     }
-    if($podiums_min > $podiums_max && !empty($podiums_min) && !empty($podiums_max)){  //ak2774, 4/15/2024
+    if($podiums_min > $podiums_max && !empty($podiums_min) && !empty($podiums_max)){ 
         flash("Min Podiums must be less than Max Podiums", "warning");
     }
 
@@ -172,7 +171,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
     if (!in_array($sort, ["grands_prix_entered", "world_championships", "highest_race_finish", "podiums", "career_points"])) {
         $sort = "grands_prix_entered";
     }
-    $order = se($_GET, "order", "desc", false);    //ak2774, 4/15/2024
+    $order = se($_GET, "order", "desc", false);  
     if (!in_array($order, ["asc", "desc"])) {
         $order = "desc";
     }
@@ -199,7 +198,7 @@ $stmt = $db->prepare($query);
 $results = [];
 try {
     $stmt->execute($params);
-    $r = $stmt->fetchAll();   //ak2774, 4/15/2024
+    $r = $stmt->fetchAll();  
     if ($r) {
         $results = $r;
     }
@@ -209,14 +208,12 @@ try {
 }
 
 $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["id"], 
-"edit_url" => get_url("admin/edit_driver.php"),
-"delete_url" => get_url("admin/delete_driver.php"),
-"view_url" => get_url("admin/view_driver.php")
+"view_url" => get_url("driver.php")
 ];
 ?>
 
 <div class="container-fluid">
-    <h3>List Drivers</h3>
+    <h3>Available Drivers</h3>
     <form method="GET" onsubmit="return validate(this);">
         <div class="row mb-3" style="align-items: flex-end;">
 
@@ -231,7 +228,18 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
     <?php render_result_counts(count($results), $total_records); ?>
-    <?php render_table($table); ?>
+    <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
+        <?php foreach ($results as $driver) : ?>
+            <div class="col">
+                <?php render_driver_card($driver); ?>
+            </div>
+        <?php endforeach; ?>
+        <?php if(count($results)===0): ?>
+            <div class="col">
+                No results to show
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <script>
@@ -247,7 +255,7 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
         let minWCs = parseInt(form.world_championships_min.value);
         let maxWCs = parseInt(form.world_championships_max.value);
         if(minWCs > maxWCs && minWCs!="" && maxWCs!=""){
-            flash("Min WCs must be less than Max WCs [js]", "warning"); //ak2774, 4/15/2024
+            flash("Min WCs must be less than Max WCs [js]", "warning");
             isValid=false;
         }
 
@@ -261,7 +269,7 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
         let minPodiums = parseInt(form.podiums_min.value);
         let maxPodiums = parseInt(form.podiums_max.value);
         if(minPodiums > maxPodiums && minPodiums!="" && maxPodiums!=""){
-            flash("Min Podiums must be less than Max Podiums [js]", "warning");  //ak2774, 4/15/2024
+            flash("Min Podiums must be less than Max Podiums [js]", "warning");
             isValid=false;
         }
         let minPoints = parseInt(form.career_points_min.value);
@@ -281,5 +289,5 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
 
 
 <?php
-require_once(__DIR__ . "/../../../partials/flash.php");
+require_once(__DIR__ . "/../../partials/flash.php");
 ?>

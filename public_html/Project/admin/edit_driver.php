@@ -4,7 +4,7 @@ require(__DIR__ . "/../../../partials/nav.php");
 
 if(!has_role("Admin")){
     flash("You do not have permission to view this page", "warning");
-    die(header("location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 ?>
 <?php
@@ -131,7 +131,7 @@ if($id>-1){
 }
 else{
     flash("Invalid id passed", "danger");
-    die(header("Location:" . get_url("admin/list_drivers.php")));
+    redirect("admin/list_drivers.php");
 }
 if($driver){
     $form = [["type" => "text", "name" => "name", "placeholder" => "Driver Name", "label" => "Driver Name", "rules" => ["required" => "required"]],
