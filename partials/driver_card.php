@@ -26,6 +26,7 @@ if (!isset($driver)) {
             <p class="card-text">Wins: <?php safer_echo($driver["highest_race_finish"]);?></p>
             <p class="card-text">Podiums: <?php safer_echo($driver["podiums"]);?></p>
             <p class="card-text">Career Points: <?php safer_echo($driver["career_points"]);?></p>
+            <p class="card-text"># of Associations: <?php safer_echo($driver["total_users"]);?></p>
             <?php if(!isset($driver["user_id"])) : ?>
                 <a class="btn btn-secondary" href="<?php echo get_url('api/detail_driver.php?driver_id=' .$driver["id"]); ?>" class="card-link">Add Driver</a>
             <?php endif; ?>
