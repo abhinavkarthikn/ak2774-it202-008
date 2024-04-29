@@ -38,8 +38,15 @@ $form = [
 
 $total_records = get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.driver_id");
 
-$query = "SELECT u.username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
-JOIN `UserDrivers` ud ON d.id=ud.driver_id JOIN Users u on u.id=ud.user_id WHERE ud.is_active=1";
+/*$query = "SELECT u.username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
+JOIN `UserDrivers` ud ON d.id=ud.driver_id JOIN Users u on u.id=ud.user_id WHERE ud.is_active=1";*/
+
+$query="SELECT 
+(SELECT u.username FROM Users u WHERE u.id=udr.user_id LIMIT 1) AS username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, udr.user_id,
+(SELECT COUNT(ud.user_id) FROM `UserDrivers` ud WHERE ud.driver_id=d.id) AS total_users
+FROM `Drivers` d LEFT JOIN `UserDrivers` udr ON d.id=udr.driver_id JOIN Users us on us.id=udr.user_id
+WHERE udr.is_active=1";
+
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
