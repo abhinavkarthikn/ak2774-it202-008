@@ -46,8 +46,22 @@ $total_records = get_total_count("`Drivers` d LEFT JOIN `UserDrivers` ud on d.id
 
 
 
-$query = "SELECT u.username, u.id, d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id, ud.is_active FROM `Drivers` d
-LEFT JOIN `UserDrivers` ud on d.id=ud.driver_id LEFT JOIN Users u on u.id=ud.user_id WHERE 1=1";
+$query = "SELECT u.username, u.id as user_id, d.id, d.name, d.image, d.abbr, d.country, d.birthdate, d.number, d.grands_prix_entered, d.world_championships, d.podiums, d.highest_race_finish, d.career_points, ud.is_active 
+          FROM `Drivers` d
+          LEFT JOIN (
+              SELECT driver_id, MIN(user_id) as min_user_id
+              FROM `UserDrivers`
+              GROUP BY driver_id
+          ) m ON d.id = m.driver_id
+          LEFT JOIN `UserDrivers` ud ON m.driver_id = ud.driver_id AND m.min_user_id = ud.user_id
+          LEFT JOIN `Users` u ON u.id = ud.user_id";
+
+
+
+
+
+
+
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
