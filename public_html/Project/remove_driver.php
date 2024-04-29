@@ -14,7 +14,7 @@ if ($driver_id && $user_id) {
         $stmt->execute($params);
         flash("Driver removed successfully", "success");
     } catch (PDOException $e) {
-        error_log("Error removing driver: " . $e->getMessage());
+        error_log("Error removing driver: " . $e->getMessage());  //ak2774, 4/29/24
         flash("Error removing driver", "danger");
     }
 }

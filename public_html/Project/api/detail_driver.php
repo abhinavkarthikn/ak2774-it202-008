@@ -8,7 +8,7 @@ if(isset($_GET["driver_id"]) && is_logged_in()){
     try{
         $stmt=$db->prepare($query);
         $stmt->execute([":user_id"=>get_user_id(), ":driver_id"=>$_GET["driver_id"]]);
-        flash("Driver added to your list", "success");
+        flash("Driver added to your list", "success");  //ak2774, 4/29/24
     }
     catch(PDOException $e){
         if($e->errorInfo[1] === 1062){

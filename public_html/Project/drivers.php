@@ -276,7 +276,7 @@ $remove = "false";
                         <?php if (isset($driver["user_id"])) : ?>
                             <?php if (has_role("Admin") && $remove = "true") : ?>
                                 <a class="btn btn-danger" href="<?php echo get_url('remove_driver.php?user_id=' . $driver["user_id"] . '&driver_id=' . $driver["id"]); ?>" class="card-link">Remove Driver</a>
-                            <?php endif; ?>
+                            <?php endif; //ak2774, 4/29/24?>
                         <?php endif; ?>
                     </div>
                 </div>
