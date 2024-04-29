@@ -79,7 +79,7 @@ if (count($_GET) > 0) {
 
     $username = se($_GET, "username", "", false);
     if (!empty($username)) {
-        $queryConditions[] = "u.username LIKE :username";
+        $queryConditions[] = "username LIKE :username";
         $params[":username"] = "%$username%";
     }
 
