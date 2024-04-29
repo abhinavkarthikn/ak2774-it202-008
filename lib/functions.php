@@ -30,4 +30,8 @@ require(__DIR__ . "/api_helper.php");
 require(__DIR__ . "/drivers_api.php");
 
 require(__DIR__ . "/session_store.php");
+
+require(__DIR__ . "/redirect.php");
+
+require(__DIR__ . "/db_helpers.php");
 ?>

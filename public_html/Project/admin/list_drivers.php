@@ -4,13 +4,12 @@ require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
     flash("You do not have permission to view this page", "warning");  //ak2774, 4/15/2024
-    die(header("location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 
 //build search form
 $form = [
     ["type" => "text", "name" => "name", "placeholder" => "Name", "label" => "Name", "include_margin" => false],
-    ["type" => "text", "name" => "nationality", "placeholder" => "Nationality", "label" => "Nationality", "include_margin" => false],
     ["type" => "text", "name" => "country", "placeholder" => "Country", "label" => "Country", "include_margin" => false],
     ["type" => "number", "name" => "number", "placeholder" => "Driver #", "label" => "Driver #", "include_margin" => false],
 
@@ -38,19 +37,20 @@ $form = [
 
 ];
 
+$total_records=get_total_count("`Drivers`");
 
 
 
 
-$query = "SELECT id, name, abbr, image, nationality, country, birthdate, birthplace, number, grands_prix_entered, world_championships, podiums, 
-highest_race_finish, highest_grid_position, career_points FROM `Drivers` WHERE 1=1";
+$query = "SELECT id, name, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, 
+highest_race_finish, career_points FROM `Drivers` WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear=isset($_GET["clear"]);
 if($is_clear){
     session_delete($session_key);
     unset($_GET["clear"]);
-    die(header("Location: " . $session_key));
+    redirect($session_key);
 }
 else{
     $session_data = session_load($session_key);     //ak2774, 4/15/2024
@@ -63,7 +63,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
 }
 
 
-if (count($_GET) > 0) {
+
     session_save($session_key, $_GET);
     $keys = array_keys($_GET);
 
@@ -189,7 +189,7 @@ if (count($_GET) > 0) {
     }
 
     $query .= " LIMIT $limit";
-}
+
 
 
 
@@ -227,9 +227,10 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
             <?php endforeach; ?>
 
         </div>
-        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); //ak2774, 4/15/2024?>
+        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
+    <?php render_result_counts(count($results), $total_records); ?>
     <?php render_table($table); ?>
 </div>
 
