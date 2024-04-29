@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $driver_ids = $_POST["drivers"];
         
         if (empty($user_ids) || empty($driver_ids)) {
-            flash("Both users and drivers need to be selected", "warning");
+            flash("Both users and drivers need to be selected", "warning");  //ak2774, 4/29/24
         } else {
             $db = getDB();
             $stmt = $db->prepare("INSERT INTO UserDrivers (user_id, driver_id, is_active) VALUES (:uid, :did, 1) 
@@ -49,7 +49,7 @@ $driver_name = "";
                 }
             }
             catch(PDOException $e){
-                flash(var_export($e->errorInfo, true), "danger");
+                flash(var_export($e->errorInfo, true), "danger");  //ak2774, 4/29/24
             }
         }
      else {
@@ -103,10 +103,11 @@ if(isset($_POST["username"])){
                     <tr>
                         <td>
                             <table class="table">
-                                <?php foreach ($users as $user) : ?>
+                                <?php foreach ($users as $user) :   //ak2774, 4/29/24?>
                                     <tr>
                                         <td>
-                                            <?php render_input(["type" => "checkbox", "id" => "user_" . se($user, 'id', "", false), "name" => "users[]", "label" => se($user, "username", "", false), "value" => se($user, 'id', "", false)]); ?>
+                                            <?php render_input(["type" => "checkbox", "id" => "user_" . se($user, 'id', "", false), 
+                                            "name" => "users[]", "label" => se($user, "username", "", false), "value" => se($user, 'id', "", false)]); ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -118,7 +119,8 @@ if(isset($_POST["username"])){
                                     <?php foreach ($drivers as $driver) : ?>
                                         <tr>
                                             <td>
-                                                <?php render_input(["type" => "checkbox", "id" => "driver_" . se($driver, 'id', "", false), "name" => "drivers[]", "label" => se($driver, "name", "", false), "value" => se($driver, 'id', "", false)]); ?>
+                                                <?php render_input(["type" => "checkbox", "id" => "driver_" . se($driver, 'id', "", false), 
+                                                "name" => "drivers[]", "label" => se($driver, "name", "", false), "value" => se($driver, 'id', "", false)]); ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -128,7 +130,7 @@ if(isset($_POST["username"])){
                     </tr>
                 </tbody>
             </table>
-            <?php render_button(["text" => "Assign Drivers", "type" => "submit", "color" => "secondary"]); ?>
+            <?php render_button(["text" => "Assign Drivers", "type" => "submit", "color" => "secondary"]);  //ak2774, 4/29/24?>
         <?php endif; ?>
     </form>
 </div>

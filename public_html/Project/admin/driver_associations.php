@@ -22,15 +22,13 @@ $form = [
     ["type" => "number", "name" => "highest_race_finish_max", "placeholder" => "Max Wins", "label" => "Max Wins", "include_margin" => false],
 
     ["type" => "number", "name" => "podiums_min", "placeholder" => "Min Podiums", "label" => "Min Podiums", "include_margin" => false],
-    ["type" => "number", "name" => "podiums_max", "placeholder" => "Max Podiums", "label" => "Max Podiums", "include_margin" => false],
+    ["type" => "number", "name" => "podiums_max", "placeholder" => "Max Podiums", "label" => "Max Podiums", "include_margin" => false],  //ak2774, 4/29/24
 
     ["type" => "number", "name" => "career_points_min", "placeholder" => "Min Points", "label" => "Min Points", "include_margin" => false],
     ["type" => "number", "name" => "career_points_max", "placeholder" => "Max Points", "label" => "Max Points", "include_margin" => false],
 
-    ["type" => "select", "name" => "sort", "label" => "Sort", "options" => [
-        "grands_prix_entered" => "GPs", "world_championships" => "WCs",
-        "highest_race_finish" => "Wins", "podiums" => "Podiums", "career_points" => "Points"
-    ], "include_margin" => false],
+    ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["grands_prix_entered" => "GPs", "world_championships" => 
+    "WCs", "highest_race_finish" => "Wins", "podiums" => "Podiums", "career_points" => "Points"], "include_margin" => false],
     ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
 
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false]
@@ -38,11 +36,9 @@ $form = [
 
 $total_records = get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.driver_id");
 
-/*$query = "SELECT u.username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
-JOIN `UserDrivers` ud ON d.id=ud.driver_id JOIN Users u on u.id=ud.user_id WHERE ud.is_active=1";*/
-
 $query="SELECT 
-(SELECT u.username FROM Users u WHERE u.id=udr.user_id LIMIT 1) AS username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, udr.user_id,
+(SELECT u.username FROM Users u WHERE u.id=udr.user_id LIMIT 1) AS username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, 
+world_championships, podiums, highest_race_finish, career_points, udr.user_id,
 (SELECT COUNT(ud.user_id) FROM `UserDrivers` ud WHERE ud.driver_id=d.id) AS total_users
 FROM `Drivers` d LEFT JOIN `UserDrivers` udr ON d.id=udr.driver_id JOIN Users us on us.id=udr.user_id
 WHERE udr.is_active=1";
@@ -55,7 +51,7 @@ if ($is_clear) {
     unset($_GET["clear"]);
     redirect($session_key);
 } else {
-    $session_data = session_load($session_key);
+    $session_data = session_load($session_key); //ak2774, 4/29/24
 }
 
 if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
@@ -95,7 +91,71 @@ if (count($_GET) > 0) {
         $params[":country"] = "%$country%";
     }
 
-    // Add other filter conditions similarly...
+    $number = se($_GET, "number", "-1", false);   //ak2774, 4/29/24
+    if (!empty($number) && $number > -1) {
+        $query .= " AND number=:number";
+        $params[":number"] = $number;
+    }
+
+    $grands_prix_entered_min = se($_GET, "grands_prix_entered_min", "-1", false);
+    if (!empty($grands_prix_entered_min) && $grands_prix_entered_min > -1) {
+        $query .= " AND grands_prix_entered>=:grands_prix_entered_min";
+        $params[":grands_prix_entered_min"] = $grands_prix_entered_min;
+    }
+
+    $grands_prix_entered_max = se($_GET, "grands_prix_entered_max", "-1", false);
+    if (!empty($grands_prix_entered_max) && $grands_prix_entered_max > -1) {
+        $query .= " AND grands_prix_entered<=:grands_prix_entered_max";
+        $params[":grands_prix_entered_max"] = $grands_prix_entered_max;
+    }
+
+    $world_championships_min = se($_GET, "world_championships_min", "-1", false);
+    if (!empty($world_championships_min) && $world_championships_min > -1) {
+        $query .= " AND world_championships>=:world_championships_min";
+        $params[":world_championships_min"] = $world_championships_min;
+    }
+
+    $world_championships_max = se($_GET, "world_championships_max", "-1", false);
+    if (!empty($world_championships_max) && $world_championships_max > -1) {    // ak2774, 4/29/24
+        $query .= " AND world_championships<=:world_championships_max";
+        $params[":world_championships_max"] = $world_championships_max;
+    }
+
+    $highest_race_finish_min = se($_GET, "highest_race_finish_min", "-1", false);
+    if (!empty($highest_race_finish_min) && $highest_race_finish_min > -1) {
+        $query .= " AND highest_race_finish>=:highest_race_finish_min";
+        $params[":highest_race_finish_min"] = $highest_race_finish_min;
+    }
+
+    $highest_race_finish_max = se($_GET, "highest_race_finish_max", "-1", false);
+    if (!empty($highest_race_finish_max) && $highest_race_finish_max > -1) {
+        $query .= " AND highest_race_finish<=:highest_race_finish_max";
+        $params[":highest_race_finish_max"] = $highest_race_finish_max;
+    }
+
+    $podiums_min = se($_GET, "podiums_min", "-1", false);
+    if (!empty($podiums_min) && $podiums_min > -1) {
+        $query .= " AND podiums>=:podiums_min";
+        $params[":podiums_min"] = $podiums_min;
+    }
+
+    $podiums_max = se($_GET, "podiums_max", "-1", false);
+    if (!empty($podiums_max) && $podiums_max > -1) {
+        $query .= " AND podiums<=:podiums_max";
+        $params[":podiums_max"] = $podiums_max;
+    }
+
+    $career_points_min = se($_GET, "career_points_min", "-1", false);
+    if (!empty($career_points_min) && $career_points_min > -1) {
+        $query .= " AND career_points>=:career_points_min";
+        $params[":career_points_min"] = $career_points_min;
+    }
+
+    $career_points_max = se($_GET, "career_points_max", "-1", false);   //ak2774, 4/29/24
+    if (!empty($career_points_max) && $career_points_max > -1) {
+        $query .= " AND career_points<=:career_points_max";
+        $params[":career_points_max"] = $career_points_max;
+    }
 
     if (!empty($queryConditions)) {
         $query .= " AND " . implode(" AND ", $queryConditions);
@@ -135,7 +195,7 @@ try {
         $results = $r;
     }
 } catch (PDOException $e) {
-    error_log("Error fetching drivers: " . var_export($e, true));
+    error_log("Error fetching drivers: " . var_export($e, true));  //ak2774, 4/29/24
     flash("Unhandled error occurred", "danger");
 }
 foreach ($results as $index => $driver) {
@@ -151,9 +211,12 @@ $table = [
     "view_url" => get_url("driver.php"),
 ];
 
-$remove = !empty($username) || !empty($name) || !empty($country) || !empty($_GET["number"]) || !empty($_GET["grands_prix_entered_min"]) || !empty($_GET["grands_prix_entered_max"]) || !empty($_GET["world_championships_min"]) || !empty($_GET["world_championships_max"]) || !empty($_GET["highest_race_finish_min"]) || !empty($_GET["highest_race_finish_max"]) || !empty($_GET["podiums_min"]) || !empty($_GET["podiums_max"]) || !empty($_GET["career_points_min"]) || !empty($_GET["career_points_max"]);
+$remove = !empty($username) || !empty($name) || !empty($country) || !empty($_GET["number"]) || !empty($_GET["grands_prix_entered_min"]) || 
+!empty($_GET["grands_prix_entered_max"]) || !empty($_GET["world_championships_min"]) || !empty($_GET["world_championships_max"]) || 
+!empty($_GET["highest_race_finish_min"]) || !empty($_GET["highest_race_finish_max"]) || !empty($_GET["podiums_min"]) || !empty($_GET["podiums_max"]) || 
+!empty($_GET["career_points_min"]) || !empty($_GET["career_points_max"]);
 
-require(__DIR__ . "/../../../partials/flash.php");
+require(__DIR__ . "/../../../partials/flash.php");  //ak2774, 4/29/24
 ?>
 
 <div class="container-fluid">
@@ -178,7 +241,7 @@ require(__DIR__ . "/../../../partials/flash.php");
     <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         <?php foreach ($results as $driver) : ?>
             <div class="col">
-                <?php render_driver_card($driver); ?>
+                <?php render_driver_card($driver); //ak2774, 4/29/24?>
             </div>
         <?php endforeach; ?>
         <?php if (count($results) === 0) : ?>

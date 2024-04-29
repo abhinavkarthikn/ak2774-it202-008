@@ -12,7 +12,7 @@ if(isset($_GET["remove"])){
         flash("All drivers removed", "success");
     }
     catch(PDOException $e){
-        error_log("Error removing all drivers: " . var_export($e, true));
+        error_log("Error removing all drivers: " . var_export($e, true)); //ak2774, 4/29/24
         flash("Error removing all drivers", "danger");
         
     }
@@ -48,16 +48,16 @@ $form = [
     ], "include_margin" => false],
     ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
 
-    ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false]
+    ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false]  //ak2774, 4/29/24
 
 
 ];
-//error_log("Form data:" . var_export($form, true));
 
 $total_records=get_total_count("`Drivers` d JOIN `UserDrivers` ud ON d.id=ud.driver_id WHERE user_id=:user_id", [":user_id"=>get_user_id()]);
 
 
-$query = "SELECT username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points, ud.user_id FROM `Drivers` d 
+$query = "SELECT username, d.id, name, abbr, image, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, 
+career_points, ud.user_id FROM `Drivers` d 
 JOIN `UserDrivers` ud ON d.id=ud.driver_id LEFT JOIN Users u ON u.id=ud.user_id
 WHERE user_id=:user_id";
 $params = [":user_id" => get_user_id()];
@@ -82,7 +82,7 @@ if (count($_GET) > 0) {
 
     foreach ($form as $k => $v) {
         if (in_array($v["name"], $keys)) {
-            $form[$k]["value"] = $_GET[$v["name"]];
+            $form[$k]["value"] = $_GET[$v["name"]]; //ak2774, 4/29/24
         }
     }
 
@@ -124,7 +124,7 @@ if (count($_GET) > 0) {
     }
 
     $world_championships_max = se($_GET, "world_championships_max", "-1", false);
-    if (!empty($world_championships_max) && $world_championships_max > -1) {
+    if (!empty($world_championships_max) && $world_championships_max > -1) {    // ak2774, 4/29/24
         $query .= " AND world_championships<=:world_championships_max";
         $params[":world_championships_max"] = $world_championships_max;
     }
@@ -159,7 +159,7 @@ if (count($_GET) > 0) {
         $params[":career_points_min"] = $career_points_min;
     }
 
-    $career_points_max = se($_GET, "career_points_max", "-1", false);
+    $career_points_max = se($_GET, "career_points_max", "-1", false);   //ak2774, 4/29/24
     if (!empty($career_points_max) && $career_points_max > -1) {
         $query .= " AND career_points<=:career_points_max";
         $params[":career_points_max"] = $career_points_max;
@@ -198,7 +198,7 @@ try {
         $results = $r;
     }
 } catch (PDOException $e) {
-    error_log("Error fetching drivers: " . var_export($e, true));
+    error_log("Error fetching drivers: " . var_export($e, true));  //ak2774, 4/29/24
     flash("Unhandled error occured", "danger");
 }
 foreach ($results as $index => $driver) {
@@ -233,7 +233,7 @@ $table = [
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
-    <?php render_result_counts(count($results), $total_records); ?>
+    <?php render_result_counts(count($results), $total_records);   //ak2774, 4/29/24?>
     <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         <?php foreach ($results as $driver) : ?>
             <div class="col">

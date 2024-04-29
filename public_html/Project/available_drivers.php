@@ -19,7 +19,7 @@ $form = [
     ["type" => "number", "name" => "highest_race_finish_min", "placeholder" => "Min Wins", "label" => "Min Wins", "include_margin" => false],
     ["type" => "number", "name" => "highest_race_finish_max", "placeholder" => "Max Wins", "label" => "Max Wins", "include_margin" => false],
 
-    ["type" => "number", "name" => "podiums_min", "placeholder" => "Min Podiums", "label" => "Min Podiums", "include_margin" => false],  //ak2774, 4/15/2024
+    ["type" => "number", "name" => "podiums_min", "placeholder" => "Min Podiums", "label" => "Min Podiums", "include_margin" => false],  //ak2774, 4/29/24
     ["type" => "number", "name" => "podiums_max", "placeholder" => "Max Podiums", "label" => "Max Podiums", "include_margin" => false],
 
     ["type" => "number", "name" => "career_points_min", "placeholder" => "Min Points", "label" => "Min Points", "include_margin" => false],
@@ -37,8 +37,8 @@ $form = [
 $total_records=get_total_count("`Drivers` d WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`)");
 
 
-
-$query = "SELECT d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points FROM `Drivers` d
+$query = "SELECT d.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, 
+career_points FROM `Drivers` d
 WHERE d.id NOT IN (SELECT driver_id FROM `UserDrivers`) 
 UNION 
 SELECT c.id, name, image, abbr, country, birthdate, number, grands_prix_entered, world_championships, podiums, highest_race_finish, career_points FROM `Drivers` c 
@@ -47,7 +47,7 @@ $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear=isset($_GET["clear"]);
 if($is_clear){
-    session_delete($session_key);
+    session_delete($session_key);    //ak2774, 4/29/24
     unset($_GET["clear"]);
     redirect($session_key);
 }
@@ -97,7 +97,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
         $query .= " AND grands_prix_entered >= :grands_prix_entered_min";
         $params[":grands_prix_entered_min"] = $grands_prix_entered_min;
     }
-    $grands_prix_entered_max = se($_GET, "grands_prix_entered_max", "-1", false);
+    $grands_prix_entered_max = se($_GET, "grands_prix_entered_max", "-1", false);   //ak2774, 4/29/24
     if (!empty($grands_prix_entered_max) && $grands_prix_entered_max > -1) {
         $query .= " AND grands_prix_entered <= :grands_prix_entered_max";
         $params[":grands_prix_entered_max"] = $grands_prix_entered_max;
@@ -127,7 +127,7 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
         $query .= " AND highest_race_finish >= :highest_race_finish_min";
         $params[":highest_race_finish_min"] = $highest_race_finish_min;
     }
-    $highest_race_finish_max= se($_GET, "highest_race_finish_max", "-1", false);
+    $highest_race_finish_max= se($_GET, "highest_race_finish_max", "-1", false);    //ak2774, 4/29/24
     if(!empty($highest_race_finish_max) && $highest_race_finish_max > -1){
         $query .= " AND highest_race_finish <= :highest_race_finish_max";
         $params[":highest_race_finish_max"] = $highest_race_finish_max;
@@ -157,12 +157,12 @@ if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
         $query .= " AND career_points >= :career_points_min";
         $params[":career_points_min"] = $career_points_min;
     }
-    $career_points_max = se($_GET, "career_points_max", "-1", false);
+    $career_points_max = se($_GET, "career_points_max", "-1", false);     //ak2774, 4/29/24
     if (!empty($career_points_max) && $career_points_max > -1) {
         $query .= " AND career_points <= :career_points_max";
         $params[":career_points_max"] = $career_points_max;
     }
-    if($career_points_min > $career_points_max && !empty($career_points_min) && !empty($career_points_max)){
+    if($career_points_min > $career_points_max && !empty($career_points_min) && !empty($career_points_max)){ 
         flash("Min Points must be less than Max Points", "warning");
     }
 
@@ -203,7 +203,7 @@ try {
         $results = $r;
     }
 } catch (PDOException $e) {
-    error_log("Error fetching drivers " . var_export($e, true));
+    error_log("Error fetching drivers " . var_export($e, true));   //ak2774, 4/29/24
     flash("Unhandled error occured ", "danger");
 }
 
@@ -227,7 +227,7 @@ $table = ["data" => $results, "title" => "All Drivers", "ignored_columns" => ["i
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
-    <?php render_result_counts(count($results), $total_records); ?>
+    <?php render_result_counts(count($results), $total_records);  //ak2774, 4/29/24 ?>
     <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         <?php foreach ($results as $driver) : ?>
             <div class="col">
